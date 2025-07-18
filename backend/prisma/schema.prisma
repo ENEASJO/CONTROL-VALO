@@ -1,0 +1,121 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Empresa {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  ruc       String   @unique
+  telefono  String?
+  esConsorcio Boolean @default(false) @map("es_consorcio")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relaciones con obras de ejecución
+  obrasEjecutadasEjecucion    ObraEjecucion[] @relation("EmpresaEjecutora")
+  obrasSupervisadasEjecucion  ObraEjecucion[] @relation("EmpresaSupervisora")
+
+  // Relaciones con obras de supervisión
+  obrasEjecutadasSupervision  ObraSupervision[] @relation("EmpresaEjecutora")
+  obrasSupervisadasSupervision ObraSupervision[] @relation("EmpresaSupervisora")
+
+  // Relaciones de consorcio
+  integrantesConsorcio IntegranteConsorcio[]
+
+  @@map("empresas")
+}
+
+model IntegranteConsorcio {
+  id        Int      @id @default(autoincrement())
+  empresaId Int      @map("empresa_id")
+  nombre    String
+  ruc       String
+  porcentajeParticipacion Float @map("porcentaje_participacion")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relaciones
+  empresa Empresa @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+
+  @@map("integrantes_consorcio")
+}
+
+model ObraEjecucion {
+  id                    Int      @id @default(autoincrement())
+  nombreObra           String   @map("nombre_obra")
+  numeroContrato       String   @unique @map("numero_contrato")
+  numeroExpediente     String   @map("numero_expediente")
+  periodoValorizado    String   @map("periodo_valorizado")
+  fechaInicio          DateTime @map("fecha_inicio")
+  plazoEjecucion       Int      @map("plazo_ejecucion")
+  empresaEjecutoraId   Int      @map("empresa_ejecutora_id")
+  empresaSupervisoraId Int      @map("empresa_supervisora_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  // Relaciones
+  empresaEjecutora    Empresa @relation("EmpresaEjecutora", fields: [empresaEjecutoraId], references: [id])
+  empresaSupervisora  Empresa @relation("EmpresaSupervisora", fields: [empresaSupervisoraId], references: [id])
+  profesionales       ProfesionalEjecucion[]
+
+  @@map("obras_ejecucion")
+}
+
+model ObraSupervision {
+  id                    Int      @id @default(autoincrement())
+  nombreObra           String   @map("nombre_obra")
+  numeroContrato       String   @unique @map("numero_contrato")
+  numeroExpediente     String   @map("numero_expediente")
+  periodoValorizado    String   @map("periodo_valorizado")
+  fechaInicio          DateTime @map("fecha_inicio")
+  plazoEjecucion       Int      @map("plazo_ejecucion")
+  empresaEjecutoraId   Int      @map("empresa_ejecutora_id")
+  empresaSupervisoraId Int      @map("empresa_supervisora_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  // Relaciones
+  empresaEjecutora    Empresa @relation("EmpresaEjecutora", fields: [empresaEjecutoraId], references: [id])
+  empresaSupervisora  Empresa @relation("EmpresaSupervisora", fields: [empresaSupervisoraId], references: [id])
+  profesionales       ProfesionalSupervision[]
+
+  @@map("obras_supervision")
+}
+
+model ProfesionalEjecucion {
+  id                      Int     @id @default(autoincrement())
+  obraId                  Int     @map("obra_id")
+  nombreCompleto          String  @map("nombre_completo")
+  cargo                   String
+  porcentajeParticipacion Float   @map("porcentaje_participacion")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  // Relaciones
+  obra ObraEjecucion @relation(fields: [obraId], references: [id], onDelete: Cascade)
+
+  @@map("profesionales_ejecucion")
+}
+
+model ProfesionalSupervision {
+  id                      Int     @id @default(autoincrement())
+  obraId                  Int     @map("obra_id")
+  nombreCompleto          String  @map("nombre_completo")
+  cargo                   String
+  porcentajeParticipacion Float   @map("porcentaje_participacion")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  // Relaciones
+  obra ObraSupervision @relation(fields: [obraId], references: [id], onDelete: Cascade)
+
+  @@map("profesionales_supervision")
+}
