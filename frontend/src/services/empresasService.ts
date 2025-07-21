@@ -74,7 +74,7 @@ export const empresasService = {
         }
       }
       
-      return result as ApiResponse<Empresa[]>
+      return result as unknown as ApiResponse<Empresa[]>
     } catch (error) {
       return handleApiError(error)
     }

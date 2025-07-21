@@ -6,14 +6,25 @@
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
+    "dev:seenode": "nodemon server.js",
     "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "cd frontend && npm run build",
+    "build:frontend:seenode": "cd frontend && npm run build:production",
     "build:backend": "cd backend && npm run build",
+    "build:seenode": "npm run build:frontend:seenode",
+    "build:seenode:full": "npm run build:frontend:seenode && npm run build:backend",
     "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
-    "start": "cd backend && npm start",
+    "start": "node server.js",
+    "start:backend": "cd backend && npm start",
     "test:deployment": "node test-deployment.js",
+    "test:seenode": "node test-seenode.js",
     "deploy": "npm run test:deployment && vercel --prod",
-    "deploy:preview": "npm run test:deployment && vercel"
+    "deploy:preview": "npm run test:deployment && vercel",
+    "deploy:seenode": "npm run build:seenode"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
