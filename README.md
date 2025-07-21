@@ -1,4 +1,5 @@
 # Control de Valorizaciones de Obras
+<!-- Deployment fix v2 -->
 
 Sistema web para gestionar y registrar valorizaciones de ejecución y supervisión de proyectos de construcción.
 

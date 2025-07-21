@@ -2,12 +2,6 @@ import { VercelRequest, VercelResponse } from '@vercel/node'
 import express from 'express'
 import cors from 'cors'
 import { PrismaClient } from '@prisma/client'
-import { errorHandler } from '../src/middleware/errorHandler'
-import { notFoundHandler } from '../src/middleware/notFoundHandler'
-import { requestLogger } from '../src/middleware/requestLogger'
-import empresasRoutes from '../src/routes/empresas'
-import ejecucionRoutes from '../src/routes/ejecucion'
-import supervisionRoutes from '../src/routes/supervision'
 
 // Inicializar Prisma (singleton para serverless)
 let prisma: PrismaClient
@@ -31,35 +25,27 @@ const app = express()
 
 // Middleware básico
 app.use(cors({
-  origin: true, // Permitir todos los orígenes en Vercel
+  origin: true,
   credentials: true
 }))
 
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true }))
 
-// Middleware personalizado
-app.use(requestLogger)
-
-// Rutas de salud
+// Ruta de salud simple
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
-    message: 'API de Control de Valorizaciones funcionando correctamente',
+    message: 'API funcionando correctamente',
     timestamp: new Date().toISOString(),
-    version: '1.0.0',
-    platform: 'Vercel Serverless'
+    version: '1.0.0'
   })
 })
 
-// Rutas principales
-app.use('/api/empresas', empresasRoutes)
-app.use('/api/ejecucion', ejecucionRoutes)
-app.use('/api/supervision', supervisionRoutes)
-
-// Middleware de manejo de errores
-app.use(notFoundHandler)
-app.use(errorHandler)
+// Ruta básica para probar
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Test endpoint working' })
+})
 
 // Export para Vercel
 export default app
