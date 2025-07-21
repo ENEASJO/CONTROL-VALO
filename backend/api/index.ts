@@ -44,7 +44,10 @@ app.get('/api/health', (req, res) => {
 
 // Ruta básica para probar
 app.get('/api/test', (req, res) => {
-  res.json({ message: 'Test endpoint working' })
+  res.json({ 
+    message: 'Test endpoint working',
+    timestamp: new Date().toISOString()
+  })
 })
 
 // Export para Vercel
