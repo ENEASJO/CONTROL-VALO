@@ -7,7 +7,7 @@
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
     "dev:seenode": "nodemon server.js",
-    "build": "npm run build:seenode",
+    "build": "npm run build:simple",
     "build:frontend": "cd frontend && npm run build",
     "build:frontend:seenode": "cd frontend && npm run build:production",
     "build:backend": "cd backend && npm run build",
@@ -22,7 +22,8 @@
     "prepare:seenode": "node prepare-seenode.js",
     "deploy": "npm run test:deployment && vercel --prod",
     "deploy:preview": "npm run test:deployment && vercel",
-    "deploy:seenode": "npm run build:seenode"
+    "deploy:seenode": "npm run build:seenode",
+    "build:simple": "cd frontend && npm install && npm run build:production"
   },
   "engines": {
     "node": ">=18.0.0",
