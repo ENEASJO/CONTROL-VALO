@@ -1,0 +1,32 @@
+{
+  "project": {
+    "name": "control-valorizaciones-obras",
+    "repository": "ENEASJO/CONTROL-VALO",
+    "branch": "master",
+    "nodeVersion": "18.x"
+  },
+  "seenode": {
+    "framework": "Node.js",
+    "nodeVersion": "18.x",
+    "buildCommand": "npm run build:seenode",
+    "startCommand": "npm start",
+    "installCommand": "npm run install:all",
+    "rootDirectory": "/"
+  },
+  "environment": {
+    "required": [
+      "DATABASE_URL",
+      "NODE_ENV"
+    ],
+    "optional": [
+      "CORS_ORIGIN",
+      "PORT"
+    ]
+  },
+  "urls": {
+    "seenode": "https://seenode.com",
+    "supabase": "https://supabase.com",
+    "repository": "https://github.com/ENEASJO/CONTROL-VALO",
+    "documentation": "./SEENODE-DEPLOYMENT-GUIDE.md"
+  }
+}

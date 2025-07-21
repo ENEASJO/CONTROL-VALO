@@ -18,6 +18,7 @@
     "start:backend": "cd backend && npm start",
     "test:deployment": "node test-deployment.js",
     "test:seenode": "node test-seenode.js",
+    "prepare:seenode": "node prepare-seenode.js",
     "deploy": "npm run test:deployment && vercel --prod",
     "deploy:preview": "npm run test:deployment && vercel",
     "deploy:seenode": "npm run build:seenode"
