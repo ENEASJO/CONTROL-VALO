@@ -7,11 +7,12 @@
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
     "dev:seenode": "nodemon server.js",
-    "build": "npm run build:frontend && npm run build:backend",
+    "build": "npm run build:seenode",
     "build:frontend": "cd frontend && npm run build",
     "build:frontend:seenode": "cd frontend && npm run build:production",
     "build:backend": "cd backend && npm run build",
-    "build:seenode": "npm run build:frontend:seenode",
+    "build:seenode": "bash build-seenode.sh || npm run build:seenode:fallback",
+    "build:seenode:fallback": "npm run install:all && npm run build:frontend:seenode",
     "build:seenode:full": "npm run build:frontend:seenode && npm run build:backend",
     "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
     "start": "node server.js",
@@ -28,6 +29,7 @@
     "npm": ">=8.0.0"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "typescript": "^5.0.0"
   }
 }
