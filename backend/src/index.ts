@@ -1,12 +1,20 @@
 import express from 'express'
 import cors from 'cors'
 import { PrismaClient } from '@prisma/client'
+import { env } from './config/env'
 import { errorHandler } from './middleware/errorHandler'
 import { notFoundHandler } from './middleware/notFoundHandler'
 import { requestLogger } from './middleware/requestLogger'
 import empresasRoutes from './routes/empresas'
 import ejecucionRoutes from './routes/ejecucion'
 import supervisionRoutes from './routes/supervision'
+
+// Validar variables de entorno al inicio
+console.log('🔧 Validando configuración del servidor...')
+console.log(`📦 Entorno: ${env.NODE_ENV}`)
+console.log(`🔌 Puerto: ${env.PORT}`)
+console.log(`🌐 CORS Origin: ${env.CORS_ORIGIN}`)
+console.log(`🗄️  Base de datos: ${env.DATABASE_URL ? '✅ Configurada' : '❌ No configurada'}`)
 
 // Inicializar Prisma (singleton para serverless)
 let prisma: PrismaClient
@@ -15,7 +23,7 @@ declare global {
   var __prisma: PrismaClient | undefined
 }
 
-if (process.env.NODE_ENV === 'production') {
+if (env.NODE_ENV === 'production') {
   prisma = new PrismaClient()
 } else {
   if (!global.__prisma) {
@@ -27,11 +35,11 @@ if (process.env.NODE_ENV === 'production') {
 export { prisma }
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = env.PORT
 
 // Middleware básico
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: env.CORS_ORIGIN,
   credentials: true
 }))
 
@@ -47,7 +55,9 @@ app.get('/api/health', (req, res) => {
     success: true,
     message: 'API de Control de Valorizaciones funcionando correctamente',
     timestamp: new Date().toISOString(),
-    version: '1.0.0'
+    version: '1.0.0',
+    environment: env.NODE_ENV,
+    database: 'Connected'
   })
 })
 
@@ -62,9 +72,10 @@ app.use(errorHandler)
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor ejecutándose en puerto ${PORT}`)
+  console.log('🚀 ¡Servidor iniciado correctamente!')
   console.log(`📊 API disponible en http://localhost:${PORT}/api`)
   console.log(`🏥 Health check: http://localhost:${PORT}/api/health`)
+  console.log('📝 Variables de entorno validadas correctamente')
 })
 
 // Manejo de cierre graceful

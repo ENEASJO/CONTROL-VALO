@@ -39,19 +39,24 @@
 
 2. **Importar proyecto:**
    - "New Project" > Seleccionar tu repositorio
-   - Framework Preset: "Other"
+   - Framework Preset: "Other" 
    - Root Directory: dejar vacío (raíz del proyecto)
+   - Build Command: `npm run build:simple`
+   - Output Directory: `frontend/dist`
+   - Install Command: `npm run install:all`
 
-3. **Configurar variables de entorno:**
+3. **Configurar variables de entorno en Vercel:**
    ```
    DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT].supabase.co:5432/postgres
    NODE_ENV=production
+   CORS_ORIGIN=https://tu-app.vercel.app
    ```
 
 4. **Verificar despliegue:**
    - Vercel te dará una URL como: `https://tu-app.vercel.app`
    - Frontend: `https://tu-app.vercel.app`
    - API: `https://tu-app.vercel.app/api/health`
+   - Test API: `https://tu-app.vercel.app/api/test`
 
 ### 3. Configurar Dominio Personalizado (Opcional)
 

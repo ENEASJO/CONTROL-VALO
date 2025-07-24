@@ -1,0 +1,43 @@
+# Archivos de desarrollo
+*.log
+.env.local
+.env.development
+.env.test
+
+# Dependencias de desarrollo
+node_modules/.cache
+.npm
+.yarn
+
+# Archivos de build temporales
+backend/dist
+frontend/dist/.cache
+
+# Archivos de testing
+coverage/
+*.test.ts
+*.test.js
+__tests__/
+
+# Archivos de documentación
+docs/
+*.md
+!README.md
+
+# Archivos de configuración local
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de base de datos local
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -164,4 +164,13 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   })
 })
 
+// Para desarrollo local
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3001
+  app.listen(PORT, () => {
+    console.log(`🚀 Backend API ejecutándose en puerto ${PORT}`)
+  })
+}
+
+// Para Vercel (serverless)
 export default app

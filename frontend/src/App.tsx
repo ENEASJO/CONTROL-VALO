@@ -3,6 +3,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter } from 'react-router-dom'
 import Layout from './components/Layout/Layout'
+import { NotificationProvider } from './components/Common/NotificationSnackbar'
 
 // Crear tema personalizado
 const theme = createTheme({
@@ -63,13 +64,23 @@ const theme = createTheme({
   },
 })
 
-// Crear cliente de React Query
+// Crear cliente de React Query con configuración mejorada
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      retry: (failureCount, error: any) => {
+        // No reintentar en errores 4xx
+        if (error?.status >= 400 && error?.status < 500) {
+          return false
+        }
+        return failureCount < 2
+      },
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000, // 5 minutos
+      gcTime: 10 * 60 * 1000, // 10 minutos
+    },
+    mutations: {
+      retry: false, // No reintentar mutaciones por defecto
     },
   },
 })
@@ -81,6 +92,7 @@ function App() {
         <CssBaseline />
         <BrowserRouter>
           <Layout />
+          <NotificationProvider />
         </BrowserRouter>
       </ThemeProvider>
     </QueryClientProvider>

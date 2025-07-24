@@ -1,18 +1,25 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { ejecucionService } from '../services/ejecucionService'
-import { ObraFilters, FormularioObraData, ProfesionalFormData } from '../types'
+import { 
+  ejecucionService, 
+  type ObrasEjecucionFilters, 
+  type CreateObraEjecucionData, 
+  type UpdateObraEjecucionData,
+  type ProfesionalEjecucion
+} from '../services/ejecucion'
+import { useNotification } from './useNotification'
 
-// Query keys
+// Keys para React Query
 export const ejecucionKeys = {
   all: ['ejecucion'] as const,
   obras: () => [...ejecucionKeys.all, 'obras'] as const,
-  obrasList: (filters: ObraFilters) => [...ejecucionKeys.obras(), 'list', filters] as const,
+  obrasList: (filters: ObrasEjecucionFilters) => [...ejecucionKeys.obras(), 'list', { filters }] as const,
   obraDetail: (id: number) => [...ejecucionKeys.obras(), 'detail', id] as const,
-  profesionales: (obraId: number) => [...ejecucionKeys.all, 'profesionales', obraId] as const,
+  profesionales: (obraId: number) => [...ejecucionKeys.obras(), obraId, 'profesionales'] as const,
+  estadisticas: () => [...ejecucionKeys.all, 'estadisticas'] as const,
 }
 
 // Hook para obtener lista de obras de ejecución
-export const useEjecucionObras = (filters: ObraFilters = {}) => {
+export const useObrasEjecucion = (filters: ObrasEjecucionFilters = {}) => {
   return useQuery({
     queryKey: ejecucionKeys.obrasList(filters),
     queryFn: () => ejecucionService.getObras(filters),
@@ -21,106 +28,103 @@ export const useEjecucionObras = (filters: ObraFilters = {}) => {
 }
 
 // Hook para obtener obra de ejecución por ID
-export const useEjecucionObra = (id: number, options?: { enabled?: boolean }) => {
+export const useObraEjecucion = (id: number) => {
   return useQuery({
     queryKey: ejecucionKeys.obraDetail(id),
     queryFn: () => ejecucionService.getObraById(id),
-    enabled: options?.enabled !== undefined ? options.enabled : !!id,
-  })
-}
-
-// Hook para obtener profesionales de una obra
-export const useEjecucionProfesionales = (obraId: number) => {
-  return useQuery({
-    queryKey: ejecucionKeys.profesionales(obraId),
-    queryFn: () => ejecucionService.getProfesionales(obraId),
-    enabled: !!obraId,
+    enabled: !!id,
   })
 }
 
 // Hook para crear obra de ejecución
-export const useCreateEjecucionObra = () => {
+export const useCreateObraEjecucion = () => {
   const queryClient = useQueryClient()
-
+  const { showNotification } = useNotification()
+  
   return useMutation({
-    mutationFn: (data: FormularioObraData) => ejecucionService.createObra(data),
+    mutationFn: (data: CreateObraEjecucionData) => ejecucionService.createObra(data),
     onSuccess: () => {
-      // Invalidar listas de obras
       queryClient.invalidateQueries({ queryKey: ejecucionKeys.obras() })
+      queryClient.invalidateQueries({ queryKey: ejecucionKeys.estadisticas() })
+      showNotification('Obra de ejecución creada exitosamente', 'success')
+    },
+    onError: (error: any) => {
+      showNotification(error.message || 'Error al crear obra de ejecución', 'error')
     },
   })
 }
 
 // Hook para actualizar obra de ejecución
-export const useUpdateEjecucionObra = () => {
+export const useUpdateObraEjecucion = () => {
   const queryClient = useQueryClient()
-
+  const { showNotification } = useNotification()
+  
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<FormularioObraData> }) =>
+    mutationFn: ({ id, data }: { id: number; data: UpdateObraEjecucionData }) => 
       ejecucionService.updateObra(id, data),
-    onSuccess: (_, { id }) => {
-      // Invalidar queries específicas
-      queryClient.invalidateQueries({ queryKey: ejecucionKeys.obraDetail(id) })
+    onSuccess: (response, variables) => {
       queryClient.invalidateQueries({ queryKey: ejecucionKeys.obras() })
-      queryClient.invalidateQueries({ queryKey: ejecucionKeys.profesionales(id) })
+      queryClient.invalidateQueries({ queryKey: ejecucionKeys.obraDetail(variables.id) })
+      queryClient.invalidateQueries({ queryKey: ejecucionKeys.estadisticas() })
+      showNotification('Obra de ejecución actualizada exitosamente', 'success')
+    },
+    onError: (error: any) => {
+      showNotification(error.message || 'Error al actualizar obra de ejecución', 'error')
     },
   })
 }
 
 // Hook para eliminar obra de ejecución
-export const useDeleteEjecucionObra = () => {
+export const useDeleteObraEjecucion = () => {
   const queryClient = useQueryClient()
-
+  const { showNotification } = useNotification()
+  
   return useMutation({
     mutationFn: (id: number) => ejecucionService.deleteObra(id),
     onSuccess: () => {
-      // Invalidar listas de obras
       queryClient.invalidateQueries({ queryKey: ejecucionKeys.obras() })
+      queryClient.invalidateQueries({ queryKey: ejecucionKeys.estadisticas() })
+      showNotification('Obra de ejecución eliminada exitosamente', 'success')
+    },
+    onError: (error: any) => {
+      showNotification(error.message || 'Error al eliminar obra de ejecución', 'error')
     },
   })
 }
 
-// Hook para agregar profesional
-export const useAddEjecucionProfesional = () => {
-  const queryClient = useQueryClient()
+// Hook para profesionales de ejecución
+export const useProfesionalesEjecucion = (obraId: number) => {
+  return useQuery({
+    queryKey: ejecucionKeys.profesionales(obraId),
+    queryFn: () => ejecucionService.profesionales.getByObra(obraId),
+    enabled: !!obraId,
+  })
+}
 
+// Hook para crear profesional de ejecución
+export const useCreateProfesionalEjecucion = () => {
+  const queryClient = useQueryClient()
+  const { showNotification } = useNotification()
+  
   return useMutation({
-    mutationFn: ({ obraId, data }: { obraId: number; data: ProfesionalFormData }) =>
-      ejecucionService.addProfesional(obraId, data),
-    onSuccess: (_, { obraId }) => {
-      // Invalidar profesionales y detalle de obra
-      queryClient.invalidateQueries({ queryKey: ejecucionKeys.profesionales(obraId) })
-      queryClient.invalidateQueries({ queryKey: ejecucionKeys.obraDetail(obraId) })
+    mutationFn: ({ obraId, data }: { obraId: number; data: Omit<ProfesionalEjecucion, 'id' | 'obraId' | 'createdAt' | 'updatedAt'> }) => 
+      ejecucionService.profesionales.create(obraId, data),
+    onSuccess: (response, variables) => {
+      queryClient.invalidateQueries({ queryKey: ejecucionKeys.profesionales(variables.obraId) })
+      queryClient.invalidateQueries({ queryKey: ejecucionKeys.obraDetail(variables.obraId) })
+      showNotification('Profesional agregado exitosamente', 'success')
+    },
+    onError: (error: any) => {
+      showNotification(error.message || 'Error al agregar profesional', 'error')
     },
   })
 }
 
-// Hook para actualizar profesional
-export const useUpdateEjecucionProfesional = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: ({ id, data, obraId }: { id: number; data: Partial<ProfesionalFormData>; obraId: number }) =>
-      ejecucionService.updateProfesional(id, data),
-    onSuccess: (_, { obraId }) => {
-      // Invalidar profesionales y detalle de obra
-      queryClient.invalidateQueries({ queryKey: ejecucionKeys.profesionales(obraId) })
-      queryClient.invalidateQueries({ queryKey: ejecucionKeys.obraDetail(obraId) })
-    },
-  })
-}
-
-// Hook para eliminar profesional
-export const useDeleteEjecucionProfesional = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: ({ id, obraId }: { id: number; obraId: number }) =>
-      ejecucionService.deleteProfesional(id),
-    onSuccess: (_, { obraId }) => {
-      // Invalidar profesionales y detalle de obra
-      queryClient.invalidateQueries({ queryKey: ejecucionKeys.profesionales(obraId) })
-      queryClient.invalidateQueries({ queryKey: ejecucionKeys.obraDetail(obraId) })
-    },
+// Hook para obtener estadísticas de ejecución
+export const useEstadisticasEjecucion = () => {
+  return useQuery({
+    queryKey: ejecucionKeys.estadisticas(),
+    queryFn: () => ejecucionService.getEstadisticas(),
+    staleTime: 10 * 60 * 1000, // 10 minutos
   })
 }

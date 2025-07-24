@@ -23,7 +23,7 @@
     "deploy": "npm run test:deployment && vercel --prod",
     "deploy:preview": "npm run test:deployment && vercel",
     "deploy:seenode": "npm run build:seenode",
-    "build:simple": "cd frontend && npm install && npm run build:production"
+    "build:simple": "cd frontend && npm run build:deploy"
   },
   "engines": {
     "node": ">=18.0.0",
