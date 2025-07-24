@@ -1,51 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
-import { PrismaClient } from '@prisma/client'
-import { errorHandler } from '../src/middleware/errorHandler'
-import { notFoundHandler } from '../src/middleware/notFoundHandler'
-import empresasRoutes from '../src/routes/empresas'
-import ejecucionRoutes from '../src/routes/ejecucion'
-import supervisionRoutes from '../src/routes/supervision'
-
-// Inicializar Prisma (singleton para serverless)
-let prisma: PrismaClient
-
-declare global {
-  var __prisma: PrismaClient | undefined
-}
-
-if (process.env.NODE_ENV === 'production') {
-  prisma = new PrismaClient({
-    datasources: {
-      db: {
-        url: process.env.DATABASE_URL
-      }
-    },
-    log: ['error', 'warn'],
-    errorFormat: 'minimal'
-  })
-} else {
-  if (!global.__prisma) {
-    global.__prisma = new PrismaClient({
-      log: ['query', 'info', 'warn', 'error']
-    })
-  }
-  prisma = global.__prisma
-}
-
-// Manejo de errores de conexión de Prisma
-prisma.$on('error' as never, (e: any) => {
-  console.error('❌ Prisma Error:', e)
-})
-
-// Conectar explícitamente en serverless
-if (process.env.NODE_ENV === 'production') {
-  prisma.$connect().catch((error) => {
-    console.error('❌ Failed to connect to database:', error)
-  })
-}
-
-export { prisma }
 
 const app = express()
 
@@ -60,180 +14,154 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true }))
 
-// Middleware personalizado (adaptado para serverless)
+// Logging middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
-  const start = Date.now()
-  
-  // Logging simplificado para serverless
   console.log(`📥 ${req.method} ${req.path} - ${new Date().toISOString()}`)
-  
-  // Interceptar respuesta para medir tiempo
-  const originalSend = res.send
-  res.send = function(body) {
-    const duration = Date.now() - start
-    console.log(`📤 ${req.method} ${req.path} - ${res.statusCode} - ${duration}ms`)
-    return originalSend.call(this, body)
-  }
-  
   next()
 })
 
-// Middleware de seguridad básica
-app.use((req: Request, res: Response, next: NextFunction) => {
-  // Headers de seguridad básicos
-  res.setHeader('X-Content-Type-Options', 'nosniff')
-  res.setHeader('X-Frame-Options', 'DENY')
-  res.setHeader('X-XSS-Protection', '1; mode=block')
-  next()
-})
-
-// Middleware de timeout para serverless
-app.use((req: Request, res: Response, next: NextFunction) => {
-  // Timeout de 25 segundos (Vercel tiene límite de 30s)
-  const timeout = setTimeout(() => {
-    if (!res.headersSent) {
-      console.error(`⏰ Timeout en ${req.method} ${req.path}`)
-      res.status(504).json({
-        success: false,
-        error: {
-          code: 'TIMEOUT_ERROR',
-          message: 'La operación tardó demasiado tiempo en completarse'
-        }
-      })
-    }
-  }, 25000)
-
-  // Limpiar timeout cuando la respuesta se envía
-  const originalSend = res.send
-  res.send = function(body) {
-    clearTimeout(timeout)
-    return originalSend.call(this, body)
-  }
-
-  next()
-})
-
-// Ruta de salud mejorada con test de base de datos
+// Health check SIN base de datos
 app.get('/api/health', async (req: Request, res: Response) => {
-  const healthCheck = {
+  res.json({
     success: true,
     message: 'API de Control de Valorizaciones funcionando correctamente',
     timestamp: new Date().toISOString(),
     version: '1.0.0',
+    database: 'not_configured',
     environment: process.env.NODE_ENV || 'development',
-    database: 'unknown',
-    uptime: process.uptime(),
-    memory: process.memoryUsage(),
-    services: {
-      api: 'healthy',
-      database: 'unknown'
-    }
-  }
-
-  try {
-    // Test de conexión a la base de datos con timeout
-    const startTime = Date.now()
-    await Promise.race([
-      prisma.$queryRaw`SELECT 1`,
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Database timeout')), 5000)
-      )
-    ])
-    const dbResponseTime = Date.now() - startTime
-    
-    healthCheck.database = 'connected'
-    healthCheck.services.database = 'healthy'
-    healthCheck.services = {
-      ...healthCheck.services,
-      databaseResponseTime: `${dbResponseTime}ms`
-    }
-    
-    res.json(healthCheck)
-  } catch (error) {
-    console.error('❌ Database connection error:', error)
-    
-    healthCheck.success = false
-    healthCheck.message = 'API funcionando pero con problemas de base de datos'
-    healthCheck.database = 'disconnected'
-    healthCheck.services.database = 'unhealthy'
-    healthCheck.services = {
-      ...healthCheck.services,
-      databaseError: error instanceof Error ? error.message : 'Unknown error'
-    }
-    
-    res.status(503).json(healthCheck)
-  }
+    status: 'DEMO MODE - Sin base de datos'
+  })
 })
 
-// Ruta de test para verificar integración
+// Test endpoint
 app.get('/api/test', (req: Request, res: Response) => {
   res.json({
     success: true,
-    message: 'API serverless funcionando correctamente',
+    message: 'API funcionando en modo DEMO',
     timestamp: new Date().toISOString(),
     routes: {
-      empresas: '/api/empresas',
-      ejecucion: '/api/ejecucion',
-      supervision: '/api/supervision'
+      empresas: '/api/empresas (DEMO)',
+      ejecucion: '/api/ejecucion (DEMO)',
+      supervision: '/api/supervision (DEMO)'
     }
   })
 })
 
-// Rutas principales
-app.use('/api/empresas', empresasRoutes)
-app.use('/api/ejecucion', ejecucionRoutes)
-app.use('/api/supervision', supervisionRoutes)
-
-// Middleware de manejo de errores específico para serverless
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  console.error('❌ Serverless Error:', {
-    error: error.message,
-    stack: error.stack,
-    path: req.path,
-    method: req.method,
-    timestamp: new Date().toISOString()
+// Rutas DEMO con datos ficticios
+app.get('/api/empresas', (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    data: [
+      {
+        id: 1,
+        ruc: '20123456789',
+        razonSocial: 'CONSTRUCTORA DEMO SAC',
+        nombreComercial: 'Constructora Demo',
+        direccion: 'Av. Demo 123, Lima',
+        telefono: '01-1234567',
+        email: 'demo@constructora.com',
+        representanteLegal: 'Juan Demo',
+        esConsorcio: false,
+        estado: 'ACTIVO'
+      },
+      {
+        id: 2,
+        ruc: '20987654321',
+        razonSocial: 'INGENIEROS DEMO SRL',
+        nombreComercial: 'Ingenieros Demo',
+        direccion: 'Calle Demo 456, Lima',
+        telefono: '01-7654321',
+        email: 'demo@ingenieros.com',
+        representanteLegal: 'María Demo',
+        esConsorcio: false,
+        estado: 'ACTIVO'
+      }
+    ],
+    pagination: {
+      page: 1,
+      limit: 10,
+      total: 2,
+      totalPages: 1
+    },
+    message: 'Datos DEMO - Configurar base de datos para datos reales'
   })
+})
 
-  // Errores específicos de serverless
-  if (error.code === 'ECONNRESET' || error.code === 'ENOTFOUND') {
-    return res.status(503).json({
-      success: false,
-      error: {
-        code: 'CONNECTION_ERROR',
-        message: 'Error de conexión temporal. Intenta nuevamente.'
+app.get('/api/ejecucion/obras', (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    data: [
+      {
+        id: 1,
+        numeroContrato: 'EJE-DEMO-001',
+        nombreObra: 'Obra Demo de Ejecución',
+        empresaId: 1,
+        montoContrato: 250000.00,
+        fechaInicio: '2024-01-15',
+        fechaFin: '2024-06-15',
+        ubicacion: 'Lima - Demo',
+        descripcion: 'Obra de demostración para testing',
+        estado: 'EN_PROCESO'
       }
-    })
-  }
+    ],
+    pagination: {
+      page: 1,
+      limit: 10,
+      total: 1,
+      totalPages: 1
+    },
+    message: 'Datos DEMO - Configurar base de datos para datos reales'
+  })
+})
 
-  // Error de memoria en serverless
-  if (error.message && error.message.includes('out of memory')) {
-    return res.status(507).json({
-      success: false,
-      error: {
-        code: 'MEMORY_ERROR',
-        message: 'Operación demasiado grande para procesar'
+app.get('/api/supervision/obras', (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    data: [
+      {
+        id: 1,
+        numeroContrato: 'SUP-DEMO-001',
+        nombreObra: 'Supervisión Demo',
+        empresaId: 2,
+        montoContrato: 75000.00,
+        fechaInicio: '2024-01-10',
+        fechaFin: '2024-08-10',
+        ubicacion: 'Lima - Demo',
+        descripcion: 'Supervisión de demostración para testing',
+        estado: 'EN_PROCESO'
       }
-    })
-  }
-
-  // Continuar con el manejo normal de errores
-  next(error)
+    ],
+    pagination: {
+      page: 1,
+      limit: 10,
+      total: 1,
+      totalPages: 1
+    },
+    message: 'Datos DEMO - Configurar base de datos para datos reales'
+  })
 })
 
-// Middleware de manejo de errores estándar
-app.use(notFoundHandler)
-app.use(errorHandler)
-
-// Manejo de errores no capturados específico para serverless
-process.on('uncaughtException', (error) => {
-  console.error('❌ Uncaught Exception in serverless:', error)
-  // En serverless, no podemos hacer process.exit, solo loggear
+// 404 handler
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    error: {
+      code: 'NOT_FOUND',
+      message: `Ruta ${req.method} ${req.path} no encontrada`
+    }
+  })
 })
 
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('❌ Unhandled Rejection in serverless:', reason)
-  // En serverless, no podemos hacer process.exit, solo loggear
+// Error handler
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  console.error('❌ Error:', error)
+  res.status(500).json({
+    success: false,
+    error: {
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'Error interno del servidor'
+    }
+  })
 })
 
-// Export para Vercel
 export default app
