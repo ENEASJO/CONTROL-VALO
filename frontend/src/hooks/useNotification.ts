@@ -9,43 +9,46 @@ export interface Notification {
   timestamp: number
 }
 
+export interface SingleNotification {
+  open: boolean
+  message: string
+  severity: NotificationType
+}
+
 let notificationCounter = 0
 
 export const useNotification = () => {
-  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [notification, setNotification] = useState<SingleNotification>({
+    open: false,
+    message: '',
+    severity: 'info'
+  })
 
   const showNotification = useCallback((message: string, type: NotificationType = 'info') => {
-    const notification: Notification = {
-      id: `notification-${++notificationCounter}`,
+    setNotification({
+      open: true,
       message,
-      type,
-      timestamp: Date.now(),
-    }
-
-    setNotifications(prev => [...prev, notification])
-
-    // Auto-remover después de 5 segundos (solo en producción, no en tests)
-    if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
-      setTimeout(() => {
-        setNotifications(prev => prev.filter(n => n.id !== notification.id))
-      }, 5000)
-    }
-
-    return notification.id
+      severity: type
+    })
   }, [])
 
-  const removeNotification = useCallback((id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id))
+  const hideNotification = useCallback(() => {
+    setNotification(prev => ({ ...prev, open: false }))
   }, [])
 
-  const clearAllNotifications = useCallback(() => {
-    setNotifications([])
-  }, [])
+  // Aliases para compatibilidad
+  const showSuccess = useCallback((message: string) => showNotification(message, 'success'), [showNotification])
+  const showError = useCallback((message: string) => showNotification(message, 'error'), [showNotification])
+  const showWarning = useCallback((message: string) => showNotification(message, 'warning'), [showNotification])
+  const showInfo = useCallback((message: string) => showNotification(message, 'info'), [showNotification])
 
   return {
-    notifications,
+    notification,
     showNotification,
-    removeNotification,
-    clearAllNotifications,
+    hideNotification,
+    showSuccess,
+    showError,
+    showWarning,
+    showInfo,
   }
 }
