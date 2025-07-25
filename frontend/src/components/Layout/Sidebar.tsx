@@ -48,8 +48,8 @@ const menuItems: MenuItem[] = [
     gradient: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
   },
   {
-    id: 'empresas',
-    label: 'Empresas',
+    id: 'consorcios',
+    label: 'Consorcios',
     path: '/empresas',
     icon: BusinessIcon,
     color: '#2563eb',

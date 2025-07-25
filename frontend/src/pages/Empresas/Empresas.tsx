@@ -61,10 +61,17 @@ const Empresas = () => {
       minWidth: 100,
       format: (value) => (
         <Chip 
-          label={value ? 'Consorcio' : 'Empresa'} 
+          label={value ? '🏗️ Consorcio' : '🏢 Empresa'} 
           size="small" 
-          color={value ? 'secondary' : 'default'}
-          variant={value ? 'filled' : 'outlined'}
+          color={value ? 'primary' : 'secondary'}
+          variant="filled"
+          sx={{
+            fontWeight: 600,
+            background: value 
+              ? 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)'
+              : 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+            color: 'white'
+          }}
         />
       ),
     },
@@ -198,13 +205,13 @@ const Empresas = () => {
               </Box>
               <Box>
                 <Typography variant="h3" fontWeight="bold" sx={{ color: 'white', mb: 1 }}>
-                  Empresas 🏢
+                  Consorcios 🏢
                 </Typography>
                 <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.9)', mb: 1 }}>
-                  Gestión de empresas ejecutoras y supervisoras
+                  Gestión de consorcios ejecutores y empresas supervisoras
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
-                  {totalCount} {totalCount === 1 ? 'empresa registrada' : 'empresas registradas'}
+                  {totalCount} {totalCount === 1 ? 'consorcio/empresa registrada' : 'consorcios/empresas registradas'}
                 </Typography>
               </Box>
             </Box>
@@ -229,7 +236,7 @@ const Empresas = () => {
               }}
               onClick={() => navigate('/empresas/nueva')}
             >
-              Nueva Empresa
+              Nuevo Consorcio
             </Button>
           </Box>
         </Box>
@@ -292,7 +299,7 @@ const Empresas = () => {
             <SearchBar
               value={filters.search || ''}
               onChange={handleSearch}
-              placeholder="Buscar por nombre, RUC o email..."
+              placeholder="Buscar consorcios por nombre, RUC o email..."
               fullWidth
             />
           </Box>

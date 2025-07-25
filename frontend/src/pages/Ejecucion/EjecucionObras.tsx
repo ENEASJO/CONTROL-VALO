@@ -100,7 +100,7 @@ const EjecucionObras = () => {
     },
     {
       id: 'empresaEjecutora',
-      label: 'Empresa Ejecutora',
+      label: 'Consorcio Ejecutor',
       width: 200,
       format: (value: any) => value?.nombre || 'N/A',
     },

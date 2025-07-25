@@ -39,7 +39,7 @@ const Dashboard = () => {
       newPath: '/supervision/nueva',
     },
     {
-      title: 'Empresas Registradas',
+      title: 'Consorcios Registrados',
       count: '3',
       icon: BusinessIcon,
       color: '#2563eb',
