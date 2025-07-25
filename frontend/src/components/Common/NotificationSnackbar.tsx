@@ -1,5 +1,4 @@
-import { Snackbar, Alert, AlertColor, Stack } from '@mui/material'
-import { useNotification } from '../../hooks/useNotification'
+import { Snackbar, Alert, AlertColor } from '@mui/material'
 
 interface NotificationSnackbarProps {
   open?: boolean
@@ -36,53 +35,9 @@ const NotificationSnackbar = ({
   )
 }
 
-// Componente mejorado que usa el hook de notificaciones
+// Provider simple que no hace nada (para compatibilidad)
 export const NotificationProvider = () => {
-  const { notifications, removeNotification } = useNotification()
-
-  return (
-    <Stack
-      spacing={2}
-      sx={{
-        position: 'fixed',
-        bottom: 24,
-        right: 24,
-        zIndex: 9999,
-        maxWidth: 400,
-      }}
-    >
-      {notifications.map((notification) => (
-        <Alert
-          key={notification.id}
-          severity={notification.type}
-          variant="filled"
-          onClose={() => removeNotification(notification.id)}
-          sx={{
-            width: '100%',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            '& .MuiAlert-message': {
-              fontSize: '0.875rem',
-              fontWeight: 500,
-            },
-          }}
-        >
-          {notification.message}
-        </Alert>
-      ))}
-    </Stack>
-  )
-}
-
-// Hook para usar notificaciones fácilmente en componentes
-export const useNotify = () => {
-  const { showNotification } = useNotification()
-  
-  return {
-    success: (message: string) => showNotification(message, 'success'),
-    error: (message: string) => showNotification(message, 'error'),
-    warning: (message: string) => showNotification(message, 'warning'),
-    info: (message: string) => showNotification(message, 'info'),
-  }
+  return null
 }
 
 export default NotificationSnackbar
