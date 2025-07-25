@@ -11,6 +11,8 @@ import {
   CircularProgress,
   FormControlLabel,
   Switch,
+  RadioGroup,
+  Radio,
   Divider,
   IconButton,
   Table,
@@ -70,7 +72,7 @@ const EmpresaForm = ({ empresaId, onSuccess, onCancel }: EmpresaFormProps) => {
       nombre: '',
       ruc: '',
       telefono: '',
-      esConsorcio: false,
+      esConsorcio: true,
       integrantesConsorcio: [],
     },
   })
@@ -133,6 +135,20 @@ const EmpresaForm = ({ empresaId, onSuccess, onCancel }: EmpresaFormProps) => {
       nombre: '',
       ruc: '',
       porcentajeParticipacion: 0,
+    })
+  }
+
+  // Inicializar consorcio con 2 empresas
+  const handleInitConsorcio = () => {
+    append({
+      nombre: '',
+      ruc: '',
+      porcentajeParticipacion: 50,
+    })
+    append({
+      nombre: '',
+      ruc: '',
+      porcentajeParticipacion: 50,
     })
   }
 
@@ -217,8 +233,8 @@ const EmpresaForm = ({ empresaId, onSuccess, onCancel }: EmpresaFormProps) => {
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 {watchEsConsorcio 
-                  ? 'Un consorcio debe estar integrado por 2 o más empresas'
-                  : 'Complete los datos del consorcio o empresa individual'
+                  ? 'Los consorcios son la forma principal de ejecución en obras públicas'
+                  : 'Empresa individual para casos excepcionales'
                 }
               </Typography>
             </Box>
@@ -298,24 +314,78 @@ const EmpresaForm = ({ empresaId, onSuccess, onCancel }: EmpresaFormProps) => {
                 />
               </Grid>
 
-              {/* Es Consorcio */}
+              {/* Tipo de Registro */}
               <Grid item xs={12}>
-                <Controller
-                  name="esConsorcio"
-                  control={control}
-                  render={({ field }) => (
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={field.value}
-                          onChange={field.onChange}
-                          disabled={isLoading}
+                <Box sx={{
+                  p: 3,
+                  borderRadius: 3,
+                  background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+                  border: '2px solid #e2e8f0'
+                }}>
+                  <Typography variant="h6" fontWeight="bold" sx={{ mb: 2, color: '#374151' }}>
+                    Tipo de Registro
+                  </Typography>
+                  <Controller
+                    name="esConsorcio"
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup
+                        value={field.value ? 'consorcio' : 'empresa'}
+                        onChange={(e) => field.onChange(e.target.value === 'consorcio')}
+                        sx={{ gap: 1 }}
+                      >
+                        <FormControlLabel
+                          value="consorcio"
+                          control={<Radio disabled={isLoading} />}
+                          label={
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="body1" fontWeight="600">
+                                🏗️ Consorcio
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                (Integrado por 2 o más empresas - Principal)
+                              </Typography>
+                            </Box>
+                          }
+                          sx={{
+                            p: 2,
+                            borderRadius: 2,
+                            border: '2px solid',
+                            borderColor: field.value ? '#10b981' : 'transparent',
+                            background: field.value ? 'rgba(16, 185, 129, 0.1)' : 'transparent',
+                            '&:hover': {
+                              background: 'rgba(16, 185, 129, 0.05)'
+                            }
+                          }}
                         />
-                      }
-                      label="🏗️ Es un Consorcio (2+ empresas)"
-                    />
-                  )}
-                />
+                        <FormControlLabel
+                          value="empresa"
+                          control={<Radio disabled={isLoading} />}
+                          label={
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="body1" fontWeight="600">
+                                🏢 Empresa Individual
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                (Casos excepcionales)
+                              </Typography>
+                            </Box>
+                          }
+                          sx={{
+                            p: 2,
+                            borderRadius: 2,
+                            border: '2px solid',
+                            borderColor: !field.value ? '#3b82f6' : 'transparent',
+                            background: !field.value ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                            '&:hover': {
+                              background: 'rgba(59, 130, 246, 0.05)'
+                            }
+                          }}
+                        />
+                      </RadioGroup>
+                    )}
+                  />
+                </Box>
               </Grid>
             </Grid>
 
@@ -531,19 +601,34 @@ const EmpresaForm = ({ empresaId, onSuccess, onCancel }: EmpresaFormProps) => {
                   )}
 
                   {fields.length === 0 && (
-                    <Alert 
-                      severity="info" 
-                      sx={{ 
-                        mb: 3, 
-                        borderRadius: 3,
-                        background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)',
-                        border: '1px solid #93c5fd'
-                      }}
-                    >
-                      <Typography variant="body2" fontWeight="500">
-                        🏗️ Para formar un consorcio, debe agregar mínimo 2 empresas integrantes con sus respectivos porcentajes de participación.
+                    <Box sx={{ textAlign: 'center', py: 4 }}>
+                      <Typography variant="h6" fontWeight="bold" sx={{ mb: 2, color: '#374151' }}>
+                        🏗️ Configurar Consorcio
                       </Typography>
-                    </Alert>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                        Los consorcios son la modalidad principal para obras públicas.<br/>
+                        Inicie agregando las empresas integrantes (mínimo 2).
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        onClick={handleInitConsorcio}
+                        disabled={isLoading}
+                        sx={{
+                          background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                          fontWeight: 600,
+                          px: 4,
+                          py: 1.5,
+                          borderRadius: 3,
+                          '&:hover': {
+                            background: 'linear-gradient(135deg, #047857 0%, #059669 100%)',
+                            transform: 'translateY(-2px)',
+                            boxShadow: '0 8px 20px rgba(5,150,105,0.3)'
+                          }
+                        }}
+                      >
+                        ➕ Inicializar Consorcio (2 empresas)
+                      </Button>
+                    </Box>
                   )}
                 </Card>
               </>
