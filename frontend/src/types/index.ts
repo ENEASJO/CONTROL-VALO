@@ -146,6 +146,12 @@ export type EstadoObra = 'planificada' | 'en_proceso' | 'completada' | 'suspendi
 export type TipoEmpresa = 'constructora' | 'supervisora' | 'consorcio'
 export type ModuloTipo = 'ejecucion' | 'supervision'
 
+// Constantes para ModuloTipo (para usar como valores)
+export const MODULO_TIPO = {
+  EJECUCION: 'ejecucion' as const,
+  SUPERVISION: 'supervision' as const
+} as const
+
 // Tipos de empresas
 export interface Empresa extends BaseEntity {
   nombre: string
@@ -184,6 +190,9 @@ export interface ProfesionalFormData {
   telefono?: string
   email?: string
   especialidad: string
+  nombreCompleto?: string
+  cargo?: string
+  porcentajeParticipacion?: number
 }
 
 // Tipos de obras
@@ -230,6 +239,14 @@ export const VALIDATION_RULES = {
   dateFormat: 'Formato de fecha inválido',
   contractNumber: 'Formato de número de contrato inválido',
   expedientNumber: 'Formato de número de expediente inválido',
+  NOMBRE_MIN_LENGTH: 3,
+  NOMBRE_MAX_LENGTH: 100,
+  CONTRATO_MIN_LENGTH: 5,
+  CONTRATO_MAX_LENGTH: 50,
+  PLAZO_MIN: 1,
+  PLAZO_MAX: 3650,
+  PORCENTAJE_MIN: 0,
+  PORCENTAJE_MAX: 100,
 } as const
 
 export const VALIDATION_MESSAGES = {
@@ -246,6 +263,16 @@ export const VALIDATION_MESSAGES = {
   INVALID_DATE: 'Fecha inválida',
   FUTURE_DATE_REQUIRED: 'La fecha debe ser futura',
   PAST_DATE_REQUIRED: 'La fecha debe ser pasada',
+  REQUIRED: 'Este campo es obligatorio',
+  FECHA_FUTURA: 'La fecha debe ser futura',
+  PORCENTAJE_INVALID: 'El porcentaje debe estar entre 0 y 100',
+  PORCENTAJE_EXCEDE: 'La suma de porcentajes no puede exceder 100%',
+  NOMBRE_MIN_LENGTH: 3,
+  NOMBRE_MAX_LENGTH: 100,
+  CONTRATO_MIN_LENGTH: 5,
+  CONTRATO_MAX_LENGTH: 50,
+  PLAZO_MIN: 1,
+  PLAZO_MAX: 3650,
 } as const
 
 // Constantes útiles

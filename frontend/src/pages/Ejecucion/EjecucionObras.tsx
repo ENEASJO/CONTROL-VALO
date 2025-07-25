@@ -142,15 +142,12 @@ const EjecucionObras = () => {
     if (!deleteDialog.obra) return
 
     try {
-      const result = await deleteMutation.mutateAsync(deleteDialog.obra.id)
-      if (result.success) {
-        showSuccess('Obra eliminada exitosamente')
-        setDeleteDialog({ open: false, obra: null })
-      } else {
-        showError(result.error?.message || 'Error al eliminar la obra')
-      }
-    } catch (error) {
-      showError('Error inesperado al eliminar la obra')
+      await deleteMutation.mutateAsync(deleteDialog.obra.id)
+      showNotification('Obra eliminada exitosamente', 'success')
+      refetch()
+      setDeleteDialog({ open: false, obra: null })
+    } catch (error: any) {
+      showNotification(error.message || 'Error al eliminar obra', 'error')
     }
   }
 
