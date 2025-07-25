@@ -187,8 +187,8 @@ const EjecucionObras = () => {
     )
   }
 
-  const obras = obrasData?.success ? obrasData.data?.data || [] : []
-  const totalCount = obrasData?.success ? obrasData.data?.pagination.total || 0 : 0
+  const obras = obrasData?.success ? obrasData.data || [] : []
+  const totalCount = obrasData?.success ? obrasData.pagination?.total || 0 : 0
 
   return (
     <Box>

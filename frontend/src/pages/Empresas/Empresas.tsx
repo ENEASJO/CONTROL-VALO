@@ -167,8 +167,8 @@ const Empresas = () => {
     )
   }
 
-  const empresas = empresasData?.success ? empresasData.data?.data || [] : []
-  const totalCount = empresasData?.success ? empresasData.data?.pagination.total || 0 : 0
+  const empresas = empresasData?.success ? empresasData.data || [] : []
+  const totalCount = empresasData?.success ? empresasData.pagination?.total || 0 : 0
 
   return (
     <Box>
