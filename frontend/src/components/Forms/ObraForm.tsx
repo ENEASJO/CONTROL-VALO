@@ -38,16 +38,16 @@ import {
   VALIDATION_RULES, 
   VALIDATION_MESSAGES 
 } from '../../types'
-import { useEmpresasForSelect } from '../../hooks/useEmpresas'
-import { 
-  useCreateEjecucionObra, 
-  useUpdateEjecucionObra, 
-  useEjecucionObra 
+import { useEmpresas } from '../../hooks/useEmpresas'
+import {
+  useCreateObraEjecucion,
+  useUpdateObraEjecucion,
+  useObraEjecucion
 } from '../../hooks/useEjecucion'
-import { 
-  useCreateSupervisionObra, 
-  useUpdateSupervisionObra, 
-  useSupervisionObra 
+import {
+  useCreateObraSupervision,
+  useUpdateObraSupervision,
+  useObraSupervision
 } from '../../hooks/useSupervision'
 import { useNotification } from '../../hooks/useNotification'
 import LoadingSpinner from '../Common/LoadingSpinner'

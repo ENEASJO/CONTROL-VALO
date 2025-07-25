@@ -14,13 +14,27 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useObrasEjecucion, useDeleteObraEjecucion } from '../../hooks/useEjecucion'
 import { useNotification } from '../../hooks/useNotification'
-import { Obra, TablaColumn, ObraFilters } from '../../types'
-import DataTable from '../../components/Common/DataTable'
-import SearchBar from '../../components/Common/SearchBar'
-import ConfirmDialog from '../../components/Common/ConfirmDialog'
-import NotificationSnackbar from '../../components/Common/NotificationSnackbar'
-import LoadingSpinner from '../../components/Common/LoadingSpinner'
-import ErrorMessage from '../../components/Common/ErrorMessage'
+import { TableColumn, PaginationParams, SearchFilters } from '../../types'
+
+// Tipos temporales hasta que estén definidos correctamente
+interface Obra {
+  id: number
+  nombreObra: string
+  numeroContrato: string
+  numeroExpediente: string
+  periodoValorizado: string
+  fechaInicio: string
+  plazoEjecucion: number
+  empresaEjecutora: string
+  profesionales: number
+  createdAt: string
+  updatedAt: string
+}
+
+interface ObraFilters extends SearchFilters, PaginationParams {
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
+}
 
 const EjecucionObras = () => {
   const navigate = useNavigate()
@@ -39,11 +53,11 @@ const EjecucionObras = () => {
   const { notification, showSuccess, showError, hideNotification } = useNotification()
 
   // Queries y mutations
-  const { data: obrasData, isLoading, error, refetch } = useEjecucionObras(filters)
-  const deleteMutation = useDeleteEjecucionObra()
+  const { data: obrasData, isLoading, error, refetch } = useObrasEjecucion(filters)
+  const deleteMutation = useDeleteObraEjecucion()
 
   // Configuración de columnas de la tabla
-  const columns: TablaColumn<Obra>[] = [
+  const columns: TableColumn<Obra>[] = [
     {
       id: 'nombreObra',
       label: 'Nombre de la Obra',
