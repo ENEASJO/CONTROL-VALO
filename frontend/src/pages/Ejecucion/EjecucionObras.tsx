@@ -12,7 +12,7 @@ import {
   Construction as ConstructionIcon,
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
-import { useEjecucionObras, useDeleteEjecucionObra } from '../../hooks/useEjecucion'
+import { useObrasEjecucion, useDeleteObraEjecucion } from '../../hooks/useEjecucion'
 import { useNotification } from '../../hooks/useNotification'
 import { Obra, TablaColumn, ObraFilters } from '../../types'
 import DataTable from '../../components/Common/DataTable'
