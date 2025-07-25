@@ -104,7 +104,13 @@ const DataTable = <T extends { id: number }>({
   }
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+    <Paper sx={{ 
+      width: '100%', 
+      overflow: 'hidden',
+      borderRadius: 3,
+      boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+      border: '1px solid rgba(0, 0, 0, 0.05)'
+    }}>
       <TableContainer>
         <Table stickyHeader>
           <TableHead>
@@ -114,7 +120,12 @@ const DataTable = <T extends { id: number }>({
                   key={String(column.id)}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
-                  sx={{ fontWeight: 'bold' }}
+                  sx={{
+                    backgroundColor: '#f8fafc',
+                    fontWeight: 600,
+                    color: '#374151',
+                    borderBottom: '2px solid #e5e7eb',
+                  }}
                 >
                   {column.label}
                 </TableCell>
@@ -127,10 +138,30 @@ const DataTable = <T extends { id: number }>({
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((item) => (
-              <TableRow hover key={item.id}>
+            {data.map((item, index) => (
+              <TableRow 
+                hover 
+                key={item.id}
+                sx={{
+                  '&:hover': {
+                    backgroundColor: '#f8fafc',
+                    transform: 'scale(1.001)',
+                    transition: 'all 0.2s ease',
+                  },
+                  '&:nth-of-type(even)': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.02)',
+                  }
+                }}
+              >
                 {columns.map((column) => (
-                  <TableCell key={String(column.id)} align={column.align}>
+                  <TableCell 
+                    key={String(column.id)} 
+                    align={column.align}
+                    sx={{ 
+                      borderBottom: '1px solid #f1f5f9',
+                      py: 2
+                    }}
+                  >
                     {renderCellValue(item, column)}
                   </TableCell>
                 ))}
