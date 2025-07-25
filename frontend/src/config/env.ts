@@ -29,5 +29,6 @@ console.log('🔧 Configuración del Frontend:')
 console.log(`📱 Nombre: ${config.appName} v${config.appVersion}`)
 console.log(`🌐 API URL: ${config.apiUrl}`)
 console.log(`📦 Entorno: ${config.isDevelopment ? 'Desarrollo' : 'Producción'}`)
+console.log(`🔄 Build: ${new Date().toISOString()}`)
 
 export default config
