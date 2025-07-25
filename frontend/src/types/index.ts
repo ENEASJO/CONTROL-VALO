@@ -29,6 +29,16 @@ export interface SearchFilters {
   [key: string]: any
 }
 
+// Tipos para menú de navegación
+export interface MenuItem {
+  id: string
+  label: string
+  path: string
+  icon: any
+  color?: string
+  gradient?: string
+}
+
 // Tipos para respuestas de API
 export interface ApiSuccessResponse<T = any> {
   success: true
