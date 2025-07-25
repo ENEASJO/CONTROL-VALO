@@ -91,3 +91,13 @@ export const useSearchEmpresas = (query: string, enabled: boolean = true) => {
     staleTime: 30 * 1000, // 30 segundos
   })
 }
+
+// Hook para obtener empresas para select (formato optimizado para formularios)
+export const useEmpresasForSelect = () => {
+  return useQuery({
+    queryKey: empresasKeys.lists(),
+    queryFn: () => empresasService.getEmpresas({}),
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    select: (data) => data?.data || []
+  })
+}
