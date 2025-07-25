@@ -7,7 +7,7 @@ import {
 } from '@mui/icons-material'
 import { useParams } from 'react-router-dom'
 import { MODULO_TIPO } from '../../types'
-import ObraForm from '../../components/Forms/ObraForm'
+import ObraForm from '../../components/Forms/ObraForm.tsx'
 
 const EjecucionObraForm = () => {
   const { id } = useParams<{ id: string }>()
