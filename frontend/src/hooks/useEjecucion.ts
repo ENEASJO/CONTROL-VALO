@@ -128,3 +128,6 @@ export const useEstadisticasEjecucion = () => {
     staleTime: 10 * 60 * 1000, // 10 minutos
   })
 }
+
+// Aliases para compatibilidad con código existente
+export const useEjecucionObra = useObraEjecucion

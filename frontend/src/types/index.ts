@@ -96,6 +96,9 @@ export interface TableColumn<T = any> {
   format?: (value: any, row: T) => React.ReactNode
 }
 
+// Alias para compatibilidad con código existente
+export type TablaColumn<T = any> = TableColumn<T>
+
 export interface TableState {
   page: number
   rowsPerPage: number
@@ -222,6 +225,41 @@ export interface FormularioObraData {
   empresaEjecutoraId?: number
   empresaSupervisoraId?: number
   profesionales?: ProfesionalFormData[]
+}
+
+// Tipo Obra completo (extendiendo ObraBase con relaciones)
+export interface Obra extends ObraBase {
+  empresaEjecutora?: Empresa
+  empresaSupervisora?: Empresa
+  profesionales?: ProfesionalFormData[]
+  modulo: ModuloTipo
+}
+
+// Tipos para filtros de obras
+export interface ObraFilters extends SearchFilters {
+  estado?: EstadoObra
+  empresaEjecutoraId?: number
+  empresaSupervisoraId?: number
+  fechaInicioDesde?: string
+  fechaInicioHasta?: string
+  modulo?: ModuloTipo
+}
+
+// Tipos para servicios de empresas (compatibilidad con servicios antiguos)
+export interface EmpresaFilters extends SearchFilters {
+  nombre?: string
+  ruc?: string
+  esConsorcio?: boolean
+}
+
+export interface FormularioEmpresaData {
+  nombre: string
+  ruc: string
+  telefono?: string
+  email?: string
+  direccion?: string
+  esConsorcio?: boolean
+  integrantesConsorcio?: Omit<IntegranteConsorcio, 'id' | 'empresaId'>[]
 }
 
 // Reglas de validación

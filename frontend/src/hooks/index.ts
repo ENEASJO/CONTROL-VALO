@@ -12,6 +12,7 @@ export {
   useUpdateEmpresa, 
   useDeleteEmpresa, 
   useSearchEmpresas,
+  useEmpresasForSelect,
   empresasKeys 
 } from './useEmpresas'
 
@@ -24,6 +25,7 @@ export {
   useProfesionalesEjecucion,
   useCreateProfesionalEjecucion,
   useEstadisticasEjecucion,
+  useEjecucionObra,
   ejecucionKeys 
 } from './useEjecucion'
 
@@ -36,5 +38,8 @@ export {
   useProfesionalesSupervision,
   useCreateProfesionalSupervision,
   useEstadisticasSupervision,
+  useSupervisionObras,
+  useSupervisionObra,
+  useDeleteSupervisionObra,
   supervisionKeys 
 } from './useSupervision'

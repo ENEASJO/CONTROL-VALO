@@ -88,4 +88,18 @@ export const apiRequest = {
     apiClient.delete(url).then(response => response.data),
 }
 
+// Funciones helper para manejar respuestas y errores (compatibility con servicios antiguos)
+export const handleApiResponse = <T>(response: AxiosResponse<ApiResponse<T>>): ApiResponse<T> => {
+  return response.data
+}
+
+export const handleApiError = (error: any): never => {
+  const apiError: ApiError = {
+    status: error.response?.status,
+    message: error.response?.data?.message || error.message || 'Error desconocido',
+    data: error.response?.data,
+  }
+  throw apiError
+}
+
 export default apiClient

@@ -128,3 +128,8 @@ export const useEstadisticasSupervision = () => {
     staleTime: 10 * 60 * 1000, // 10 minutos
   })
 }
+
+// Aliases para compatibilidad con código existente
+export const useSupervisionObras = useObrasSupervision
+export const useSupervisionObra = useObraSupervision
+export const useDeleteSupervisionObra = useDeleteObraSupervision
