@@ -105,3 +105,31 @@ Thumbs.db
 # Prisma
 backend/prisma/migrations/
 !backend/prisma/migrations/.gitkeep
+
+# Compiled JavaScript files (TypeScript output)
+*.js
+!*.config.js
+!**/config/*.js
+!vite.config.js
+!vite.config.*.js
+!jest.config.js
+!babel.config.js
+!webpack.config.js
+!rollup.config.js
+!server.js
+!backend/src/app.js
+
+# TypeScript compiled output
+backend/dist/
+frontend/dist/
+
+# Source maps
+*.map
+
+# Temporary files
+*.tmp
+*.temp
+
+# Lock files (let npm/yarn handle versions)
+package-lock.json
+yarn.lock
