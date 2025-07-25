@@ -13,9 +13,7 @@ const apiClient: AxiosInstance = axios.create({
 // Interceptor para requests
 apiClient.interceptors.request.use(
   (config) => {
-    if (config.isDevelopment) {
-      console.log(`🔄 API Request: ${config.method?.toUpperCase()} ${config.url}`)
-    }
+    console.log(`🔄 API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`)
     return config
   },
   (error) => {
@@ -27,9 +25,7 @@ apiClient.interceptors.request.use(
 // Interceptor para responses
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    if (config.isDevelopment) {
-      console.log(`✅ API Response: ${response.status} ${response.config.url}`)
-    }
+    console.log(`✅ API Response: ${response.status} ${response.config.url}`)
     return response
   },
   (error) => {
