@@ -5,12 +5,7 @@
   "installCommand": "npm run install:all",
   "functions": {
     "backend/api/index.ts": {
-      "includeFiles": [
-        "backend/prisma/**",
-        "backend/src/**",
-        "backend/node_modules/.prisma/**",
-        "backend/node_modules/@prisma/**"
-      ],
+      "includeFiles": "backend/prisma/schema.prisma,backend/prisma/**,backend/node_modules/@prisma/**,backend/node_modules/.prisma/**",
       "memory": 1024,
       "maxDuration": 30
     }
