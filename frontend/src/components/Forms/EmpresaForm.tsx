@@ -26,6 +26,7 @@ import {
   Cancel as CancelIcon,
   Add as AddIcon,
   Delete as DeleteIcon,
+  Business as BusinessIcon,
 } from '@mui/icons-material'
 import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -192,9 +193,36 @@ const EmpresaForm = ({ empresaId, onSuccess, onCancel }: EmpresaFormProps) => {
     <Box>
       <Card>
         <CardContent sx={{ p: 4 }}>
-          <Typography variant="h6" gutterBottom fontWeight="bold">
-            {isEditing ? 'Editar Empresa' : 'Nueva Empresa'}
-          </Typography>
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 2, 
+            mb: 2,
+            p: 3,
+            borderRadius: 3,
+            background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+            border: '1px solid rgba(0,0,0,0.05)'
+          }}>
+            <Box sx={{
+              p: 2,
+              borderRadius: 2,
+              background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+              color: 'white'
+            }}>
+              <BusinessIcon sx={{ fontSize: 28 }} />
+            </Box>
+            <Box>
+              <Typography variant="h5" gutterBottom fontWeight="bold" sx={{ mb: 0.5 }}>
+                {isEditing ? 'Editar Consorcio/Empresa 📝' : 'Nuevo Consorcio/Empresa ➕'}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {watchEsConsorcio 
+                  ? 'Un consorcio debe estar integrado por 2 o más empresas'
+                  : 'Complete los datos del consorcio o empresa individual'
+                }
+              </Typography>
+            </Box>
+          </Box>
           
           <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
             <Grid container spacing={3}>
@@ -217,7 +245,7 @@ const EmpresaForm = ({ empresaId, onSuccess, onCancel }: EmpresaFormProps) => {
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      label="Nombre de la Empresa"
+                      label={watchEsConsorcio ? "Nombre del Consorcio" : "Nombre de la Empresa"}
                       fullWidth
                       required
                       error={!!errors.nombre}
@@ -284,7 +312,7 @@ const EmpresaForm = ({ empresaId, onSuccess, onCancel }: EmpresaFormProps) => {
                           disabled={isLoading}
                         />
                       }
-                      label="Es un Consorcio"
+                      label="🏗️ Es un Consorcio (2+ empresas)"
                     />
                   )}
                 />
@@ -296,31 +324,73 @@ const EmpresaForm = ({ empresaId, onSuccess, onCancel }: EmpresaFormProps) => {
               <>
                 <Divider sx={{ my: 4 }} />
                 
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                  <Typography variant="h6">
-                    Integrantes del Consorcio
-                  </Typography>
-                  <Button
-                    variant="outlined"
-                    startIcon={<AddIcon />}
-                    onClick={handleAddIntegrante}
-                    size="small"
-                    disabled={isLoading}
-                  >
-                    Agregar Integrante
-                  </Button>
-                </Box>
+                <Card sx={{ 
+                  p: 3, 
+                  borderRadius: 3, 
+                  background: 'linear-gradient(135deg, #fefefe 0%, #f8fafc 100%)',
+                  border: '2px solid #e2e8f0',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+                }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Box sx={{
+                        p: 1.5,
+                        borderRadius: 2,
+                        background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                        color: 'white'
+                      }}>
+                        <BusinessIcon sx={{ fontSize: 20 }} />
+                      </Box>
+                      <Box>
+                        <Typography variant="h6" fontWeight="bold">
+                          Empresas Integrantes del Consorcio
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Mínimo 2 empresas requeridas para formar un consorcio
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      onClick={handleAddIntegrante}
+                      size="medium"
+                      disabled={isLoading}
+                      sx={{
+                        background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                        fontWeight: 600,
+                        px: 3,
+                        borderRadius: 2,
+                        '&:hover': {
+                          background: 'linear-gradient(135deg, #047857 0%, #059669 100%)',
+                          transform: 'translateY(-1px)',
+                          boxShadow: '0 4px 12px rgba(5,150,105,0.3)'
+                        }
+                      }}
+                    >
+                      Agregar Empresa
+                    </Button>
+                  </Box>
 
-                {/* Tabla de integrantes */}
-                {fields.length > 0 && (
-                  <TableContainer component={Paper} variant="outlined" sx={{ mb: 2 }}>
+                  {/* Tabla de integrantes */}
+                  {fields.length > 0 && (
+                    <TableContainer 
+                      component={Paper} 
+                      variant="outlined" 
+                      sx={{ 
+                        mb: 3, 
+                        borderRadius: 3, 
+                        border: '1px solid #e2e8f0',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+                      }}
+                    >
                     <Table size="small">
                       <TableHead>
-                        <TableRow>
-                          <TableCell>Nombre de la Empresa</TableCell>
-                          <TableCell>RUC</TableCell>
-                          <TableCell width={120}>Porcentaje (%)</TableCell>
-                          <TableCell width={80}>Acciones</TableCell>
+                        <TableRow sx={{ background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)' }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: '#374151' }}>Nombre de la Empresa</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: '#374151' }}>RUC</TableCell>
+                          <TableCell width={130} sx={{ fontWeight: 'bold', color: '#374151' }}>Porcentaje (%)</TableCell>
+                          <TableCell width={100} sx={{ fontWeight: 'bold', color: '#374151', textAlign: 'center' }}>Acciones</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -394,12 +464,19 @@ const EmpresaForm = ({ empresaId, onSuccess, onCancel }: EmpresaFormProps) => {
                                 )}
                               />
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ textAlign: 'center' }}>
                               <IconButton
                                 size="small"
                                 color="error"
                                 onClick={() => remove(index)}
-                                disabled={isLoading}
+                                disabled={isLoading || fields.length <= 2}
+                                sx={{
+                                  '&:hover': {
+                                    background: 'rgba(239, 68, 68, 0.1)',
+                                    transform: 'scale(1.1)'
+                                  },
+                                  opacity: fields.length <= 2 ? 0.5 : 1
+                                }}
                               >
                                 <DeleteIcon />
                               </IconButton>
@@ -407,28 +484,68 @@ const EmpresaForm = ({ empresaId, onSuccess, onCancel }: EmpresaFormProps) => {
                           </TableRow>
                         ))}
                       </TableBody>
-                    </Table>
-                  </TableContainer>
-                )}
+                      </Table>
+                    </TableContainer>
+                  )}
 
-                {/* Resumen de porcentajes del consorcio */}
-                {fields.length > 0 && (
-                  <Alert 
-                    severity={totalPorcentajeConsorcio > 100 ? 'error' : totalPorcentajeConsorcio === 100 ? 'success' : 'info'}
-                    sx={{ mb: 3 }}
-                  >
-                    Total de porcentajes del consorcio: {totalPorcentajeConsorcio.toFixed(2)}%
-                    {totalPorcentajeConsorcio > 100 && ' - Excede el 100%'}
-                    {totalPorcentajeConsorcio === 100 && ' - Perfecto'}
-                    {totalPorcentajeConsorcio < 100 && ` - Faltan ${(100 - totalPorcentajeConsorcio).toFixed(2)}%`}
-                  </Alert>
-                )}
+                  {/* Resumen de porcentajes del consorcio */}
+                  {fields.length > 0 && (
+                    <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+                      <Alert 
+                        severity={totalPorcentajeConsorcio > 100 ? 'error' : totalPorcentajeConsorcio === 100 ? 'success' : 'warning'}
+                        sx={{ 
+                          flex: 1,
+                          borderRadius: 3,
+                          border: '1px solid',
+                          borderColor: totalPorcentajeConsorcio > 100 ? '#fee2e2' : totalPorcentajeConsorcio === 100 ? '#dcfce7' : '#fef3c7'
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Typography variant="body2" fontWeight="600">
+                            Total de participación: {totalPorcentajeConsorcio.toFixed(2)}%
+                          </Typography>
+                          {totalPorcentajeConsorcio > 100 && <Typography variant="body2">⚠️ Excede el 100%</Typography>}
+                          {totalPorcentajeConsorcio === 100 && <Typography variant="body2">✅ Perfecto</Typography>}
+                          {totalPorcentajeConsorcio < 100 && (
+                            <Typography variant="body2">
+                              📊 Faltan {(100 - totalPorcentajeConsorcio).toFixed(2)}%
+                            </Typography>
+                          )}
+                        </Box>
+                      </Alert>
+                      
+                      <Alert 
+                        severity={fields.length >= 2 ? 'success' : 'error'}
+                        sx={{ 
+                          minWidth: 200,
+                          borderRadius: 3,
+                          border: '1px solid',
+                          borderColor: fields.length >= 2 ? '#dcfce7' : '#fee2e2'
+                        }}
+                      >
+                        <Typography variant="body2" fontWeight="600">
+                          {fields.length >= 2 ? `✅ ${fields.length} empresas` : `❌ Mínimo 2 empresas`}
+                        </Typography>
+                      </Alert>
+                    </Box>
+                  )}
 
-                {fields.length === 0 && (
-                  <Alert severity="warning" sx={{ mb: 3 }}>
-                    Debe agregar al menos un integrante al consorcio
-                  </Alert>
-                )}
+                  {fields.length === 0 && (
+                    <Alert 
+                      severity="info" 
+                      sx={{ 
+                        mb: 3, 
+                        borderRadius: 3,
+                        background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)',
+                        border: '1px solid #93c5fd'
+                      }}
+                    >
+                      <Typography variant="body2" fontWeight="500">
+                        🏗️ Para formar un consorcio, debe agregar mínimo 2 empresas integrantes con sus respectivos porcentajes de participación.
+                      </Typography>
+                    </Alert>
+                  )}
+                </Card>
               </>
             )}
 
@@ -446,7 +563,16 @@ const EmpresaForm = ({ empresaId, onSuccess, onCancel }: EmpresaFormProps) => {
                 type="submit"
                 variant="contained"
                 startIcon={isLoading ? <CircularProgress size={20} /> : <SaveIcon />}
-                disabled={isLoading || !isValid || (!isDirty && isEditing) || (watchEsConsorcio && totalPorcentajeConsorcio > 100)}
+                disabled={
+                  isLoading || 
+                  !isValid || 
+                  (!isDirty && isEditing) || 
+                  (watchEsConsorcio && (
+                    totalPorcentajeConsorcio > 100 || 
+                    fields.length < 2 ||
+                    totalPorcentajeConsorcio !== 100
+                  ))
+                }
               >
                 {isLoading ? 'Guardando...' : (isEditing ? 'Actualizar' : 'Crear')}
               </Button>
