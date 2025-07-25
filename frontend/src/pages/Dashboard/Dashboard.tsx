@@ -76,13 +76,48 @@ const Dashboard = () => {
   return (
     <Box>
       {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom fontWeight="bold">
-          Dashboard
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Resumen general del sistema de control de valorizaciones
-        </Typography>
+      <Box sx={{ mb: 5 }}>
+        <Box sx={{ 
+          background: 'linear-gradient(135deg, #2563eb 0%, #059669 100%)',
+          borderRadius: 4,
+          p: 4,
+          color: 'white',
+          position: 'relative',
+          overflow: 'hidden',
+          mb: 4
+        }}>
+          <Box sx={{ position: 'relative', zIndex: 2 }}>
+            <Typography variant="h3" gutterBottom fontWeight="bold" sx={{ color: 'white' }}>
+              ¡Bienvenido al Dashboard! 👋
+            </Typography>
+            <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.9)', mb: 2 }}>
+              Sistema de Control de Valorizaciones de Obras
+            </Typography>
+            <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.8)' }}>
+              Gestiona proyectos, supervisa obras y controla empresas de manera eficiente
+            </Typography>
+          </Box>
+          <Box sx={{
+            position: 'absolute',
+            top: -50,
+            right: -50,
+            width: 200,
+            height: 200,
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.1)',
+            zIndex: 1
+          }} />
+          <Box sx={{
+            position: 'absolute',
+            bottom: -30,
+            left: -30,
+            width: 150,
+            height: 150,
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.05)',
+            zIndex: 1
+          }} />
+        </Box>
       </Box>
 
       {/* Stats Cards */}
@@ -95,39 +130,88 @@ const Dashboard = () => {
                 sx={{
                   height: '100%',
                   cursor: 'pointer',
-                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  transition: 'all 0.3s ease-in-out',
                   '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                    transform: 'translateY(-8px)',
+                    boxShadow: '0 12px 40px rgba(0,0,0,0.12)',
+                    '& .icon-container': {
+                      transform: 'scale(1.1)',
+                    },
+                    '& .stat-number': {
+                      transform: 'scale(1.05)',
+                    }
                   },
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: stat.gradient,
+                  }
                 }}
                 onClick={() => navigate(stat.path)}
               >
-                <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <CardContent sx={{ p: 3, position: 'relative' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3 }}>
                     <Box
+                      className="icon-container"
                       sx={{
-                        p: 1.5,
-                        borderRadius: 2,
-                        bgcolor: `${stat.color}15`,
-                        mr: 2,
+                        p: 2,
+                        borderRadius: 3,
+                        background: stat.gradient,
+                        mr: 3,
+                        transition: 'transform 0.3s ease',
+                        boxShadow: `0 4px 20px ${stat.color}40`,
                       }}
                     >
-                      <Icon sx={{ color: stat.color, fontSize: 28 }} />
+                      <Icon sx={{ color: 'white', fontSize: 32 }} />
                     </Box>
                     <Box sx={{ flexGrow: 1 }}>
-                      <Typography variant="h3" fontWeight="bold" color={stat.color}>
+                      <Typography 
+                        className="stat-number"
+                        variant="h2" 
+                        fontWeight="bold" 
+                        sx={{ 
+                          background: stat.gradient,
+                          backgroundClip: 'text',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          transition: 'transform 0.3s ease',
+                          mb: 1
+                        }}
+                      >
                         {stat.count}
                       </Typography>
                     </Box>
                   </Box>
-                  <Typography variant="h6" gutterBottom>
+                  
+                  <Typography variant="h6" fontWeight="600" color="text.primary" gutterBottom>
                     {stat.title}
                   </Typography>
-                  <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
+                  
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                    Gestiona y controla eficientemente
+                  </Typography>
+                  
+                  <Box sx={{ display: 'flex', gap: 1.5 }}>
                     <Button
                       size="small"
                       variant="outlined"
+                      sx={{ 
+                        borderColor: stat.color,
+                        color: stat.color,
+                        borderRadius: 2,
+                        '&:hover': {
+                          bgcolor: `${stat.color}10`,
+                          borderColor: stat.color,
+                        }
+                      }}
                       onClick={(e) => {
                         e.stopPropagation()
                         navigate(stat.path)
@@ -138,8 +222,17 @@ const Dashboard = () => {
                     <Button
                       size="small"
                       variant="contained"
+                      sx={{ 
+                        background: stat.gradient,
+                        borderRadius: 2,
+                        boxShadow: 'none',
+                        '&:hover': {
+                          background: stat.gradient,
+                          transform: 'translateY(-1px)',
+                          boxShadow: `0 4px 12px ${stat.color}40`,
+                        }
+                      }}
                       startIcon={<AddIcon />}
-                      sx={{ bgcolor: stat.color }}
                       onClick={(e) => {
                         e.stopPropagation()
                         navigate(stat.newPath)
