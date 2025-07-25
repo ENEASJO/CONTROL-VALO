@@ -6,7 +6,7 @@ import {
   Construction as ConstructionIcon,
 } from '@mui/icons-material'
 import { useParams } from 'react-router-dom'
-import { ModuloTipo } from '../../types'
+import { MODULO_TIPO } from '../../types'
 import ObraForm from '../../components/Forms/ObraForm'
 
 const EjecucionObraForm = () => {
@@ -29,7 +29,7 @@ const EjecucionObraForm = () => {
       </Box>
 
       {/* Form */}
-      <ObraForm tipo={ModuloTipo.EJECUCION} />
+      <ObraForm tipo={MODULO_TIPO.EJECUCION} />
     </Box>
   )
 }

@@ -35,6 +35,7 @@ import {
   ProfesionalFormData, 
   Empresa,
   ModuloTipo,
+  MODULO_TIPO,
   VALIDATION_RULES, 
   VALIDATION_MESSAGES 
 } from '../../types'
@@ -102,13 +103,13 @@ const ObraForm = ({ tipo, obraId, onSuccess, onCancel }: ObraFormProps) => {
 
   // Configuración por tipo de módulo
   const config = {
-    [ModuloTipo.EJECUCION]: {
+    [MODULO_TIPO.EJECUCION]: {
       title: 'Obra de Ejecución',
       icon: ConstructionIcon,
       color: '#388e3c',
       path: '/ejecucion',
     },
-    [ModuloTipo.SUPERVISION]: {
+    [MODULO_TIPO.SUPERVISION]: {
       title: 'Obra de Supervisión',
       icon: SupervisionIcon,
       color: '#f57c00',

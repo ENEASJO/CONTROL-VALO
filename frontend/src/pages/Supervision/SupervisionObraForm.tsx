@@ -6,7 +6,7 @@ import {
   Visibility as SupervisionIcon,
 } from '@mui/icons-material'
 import { useParams } from 'react-router-dom'
-import { ModuloTipo } from '../../types'
+import { MODULO_TIPO } from '../../types'
 import ObraForm from '../../components/Forms/ObraForm'
 
 const SupervisionObraForm = () => {
@@ -29,7 +29,7 @@ const SupervisionObraForm = () => {
       </Box>
 
       {/* Form */}
-      <ObraForm tipo={ModuloTipo.SUPERVISION} />
+      <ObraForm tipo={MODULO_TIPO.SUPERVISION} />
     </Box>
   )
 }
