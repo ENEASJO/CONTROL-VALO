@@ -15,7 +15,9 @@ function getEnvVar(key: string, defaultValue?: string): string {
 }
 
 export const config: AppConfig = {
-  apiUrl: getEnvVar('VITE_API_URL', 'http://localhost:3000/api'),
+  apiUrl: import.meta.env.PROD 
+    ? '/api'  // En producción usar la misma URL
+    : getEnvVar('VITE_API_URL', 'http://localhost:3000/api'), // En desarrollo
   appName: getEnvVar('VITE_APP_NAME', 'Control de Valorizaciones'),
   appVersion: getEnvVar('VITE_APP_VERSION', '1.0.0'),
   isDevelopment: import.meta.env.DEV,
