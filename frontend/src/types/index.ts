@@ -147,6 +147,8 @@ export interface UserPermissions {
 export type TipoObra = 'ejecucion' | 'supervision'
 export type EstadoObra = 'planificada' | 'en_proceso' | 'completada' | 'suspendida'
 export type TipoEmpresa = 'constructora' | 'supervisora' | 'consorcio'
+
+// Tipo principal para módulos (asegurar exportación correcta)
 export type ModuloTipo = 'ejecucion' | 'supervision'
 
 // Constantes para ModuloTipo (para usar como valores)
