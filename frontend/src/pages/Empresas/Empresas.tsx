@@ -36,7 +36,7 @@ const Empresas = () => {
     empresa: Empresa | null
   }>({ open: false, empresa: null })
 
-  const { notification, showSuccess, showError, hideNotification } = useNotification()
+  const { notification, showNotification, hideNotification } = useNotification()
 
   // Queries y mutations
   const { data: empresasData, isLoading, error, refetch } = useEmpresas(filters)
@@ -127,13 +127,13 @@ const Empresas = () => {
     try {
       const result = await deleteMutation.mutateAsync(deleteDialog.empresa.id)
       if (result.success) {
-        showSuccess('Empresa eliminada exitosamente')
+        showNotification('Empresa eliminada exitosamente', 'success')
         setDeleteDialog({ open: false, empresa: null })
       } else {
-        showError(result.error?.message || 'Error al eliminar la empresa')
+        showNotification(result.error?.message || 'Error al eliminar la empresa', 'error')
       }
     } catch (error) {
-      showError('Error inesperado al eliminar la empresa')
+      showNotification('Error inesperado al eliminar la empresa', 'error')
     }
   }
 

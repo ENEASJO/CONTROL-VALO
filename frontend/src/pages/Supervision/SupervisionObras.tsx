@@ -36,7 +36,7 @@ const SupervisionObras = () => {
     obra: Obra | null
   }>({ open: false, obra: null })
 
-  const { notification, showSuccess, showError, hideNotification } = useNotification()
+  const { notification, showNotification, hideNotification } = useNotification()
 
   // Queries y mutations
   const { data: obrasData, isLoading, error, refetch } = useSupervisionObras(filters)
@@ -128,13 +128,13 @@ const SupervisionObras = () => {
     try {
       const result = await deleteMutation.mutateAsync(deleteDialog.obra.id)
       if (result.success) {
-        showSuccess('Obra eliminada exitosamente')
+        showNotification('Obra eliminada exitosamente', 'success')
         setDeleteDialog({ open: false, obra: null })
       } else {
-        showError(result.error?.message || 'Error al eliminar la obra')
+        showNotification(result.error?.message || 'Error al eliminar la obra', 'error')
       }
     } catch (error) {
-      showError('Error inesperado al eliminar la obra')
+      showNotification('Error inesperado al eliminar la obra', 'error')
     }
   }
 
