@@ -10,6 +10,7 @@ import {
 import {
   Add as AddIcon,
   Construction as ConstructionIcon,
+  Search as SearchIcon,
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import { useObrasEjecucion, useDeleteObraEjecucion } from '../../hooks/useEjecucion'
@@ -192,32 +193,121 @@ const EjecucionObras = () => {
 
   return (
     <Box>
-      {/* Header */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <ConstructionIcon sx={{ color: '#388e3c', fontSize: 32 }} />
-          <Box>
-            <Typography variant="h4" fontWeight="bold">
-              Obras de Ejecución
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Gestión de obras en ejecución
-            </Typography>
+      {/* Header Moderno */}
+      <Box sx={{ 
+        background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+        borderRadius: 4,
+        p: 4,
+        color: 'white',
+        position: 'relative',
+        overflow: 'hidden',
+        mb: 4
+      }}>
+        <Box sx={{ position: 'relative', zIndex: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+              <Box sx={{
+                p: 2.5,
+                borderRadius: 3,
+                background: 'rgba(255,255,255,0.2)',
+                backdrop: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
+              }}>
+                <ConstructionIcon sx={{ color: 'white', fontSize: 40 }} />
+              </Box>
+              <Box>
+                <Typography variant="h3" fontWeight="bold" sx={{ color: 'white', mb: 1 }}>
+                  Obras de Ejecución 🏗️
+                </Typography>
+                <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.9)', mb: 1 }}>
+                  Gestión y control de proyectos en construcción
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                  {totalCount} {totalCount === 1 ? 'obra registrada' : 'obras registradas'}
+                </Typography>
+              </Box>
+            </Box>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              size="large"
+              sx={{ 
+                background: 'rgba(255,255,255,0.2)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                color: 'white',
+                fontWeight: 600,
+                px: 3,
+                py: 1.5,
+                borderRadius: 3,
+                '&:hover': {
+                  background: 'rgba(255,255,255,0.3)',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+                }
+              }}
+              onClick={() => navigate('/ejecucion/nueva')}
+            >
+              Nueva Obra
+            </Button>
           </Box>
         </Box>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          sx={{ bgcolor: '#388e3c' }}
-          onClick={() => navigate('/ejecucion/nueva')}
-        >
-          Nueva Obra
-        </Button>
+        
+        {/* Elementos decorativos */}
+        <Box sx={{
+          position: 'absolute',
+          top: -30,
+          right: -30,
+          width: 150,
+          height: 150,
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.1)',
+          zIndex: 1
+        }} />
+        <Box sx={{
+          position: 'absolute',
+          bottom: -20,
+          left: -20,
+          width: 100,
+          height: 100,
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.05)',
+          zIndex: 1
+        }} />
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          right: '10%',
+          width: 60,
+          height: 60,
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.08)',
+          zIndex: 1
+        }} />
       </Box>
 
-      {/* Filtros */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
+      {/* Filtros Modernos */}
+      <Card sx={{ 
+        mb: 4,
+        borderRadius: 3,
+        boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+        border: '1px solid rgba(0, 0, 0, 0.05)'
+      }}>
+        <CardContent sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+            <Box sx={{
+              p: 1,
+              borderRadius: 2,
+              background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+              color: 'white'
+            }}>
+              <SearchIcon fontSize="small" />
+            </Box>
+            <Typography variant="h6" fontWeight="600" color="text.primary">
+              Filtros de Búsqueda
+            </Typography>
+          </Box>
           <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
             <SearchBar
               value={filters.search || ''}

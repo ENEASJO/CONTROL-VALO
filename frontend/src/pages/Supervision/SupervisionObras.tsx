@@ -10,6 +10,7 @@ import {
 import {
   Add as AddIcon,
   Visibility as SupervisionIcon,
+  Search as SearchIcon,
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import { useSupervisionObras, useDeleteSupervisionObra } from '../../hooks/useSupervision'
@@ -174,31 +175,111 @@ const SupervisionObras = () => {
   return (
     <Box>
       {/* Header */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <SupervisionIcon sx={{ color: '#f57c00', fontSize: 32 }} />
-          <Box>
-            <Typography variant="h4" fontWeight="bold">
-              Obras de Supervisión
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Gestión de obras en supervisión
-            </Typography>
+      {/* Header Moderno */}
+      <Box sx={{ 
+        background: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
+        borderRadius: 4,
+        p: 4,
+        color: 'white',
+        position: 'relative',
+        overflow: 'hidden',
+        mb: 4
+      }}>
+        <Box sx={{ position: 'relative', zIndex: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+              <Box sx={{
+                p: 2.5,
+                borderRadius: 3,
+                background: 'rgba(255,255,255,0.2)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
+              }}>
+                <SupervisionIcon sx={{ color: 'white', fontSize: 40 }} />
+              </Box>
+              <Box>
+                <Typography variant="h3" fontWeight="bold" sx={{ color: 'white', mb: 1 }}>
+                  Obras de Supervisión 👁️
+                </Typography>
+                <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.9)', mb: 1 }}>
+                  Seguimiento y control de calidad de obras
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                  {totalCount} {totalCount === 1 ? 'obra en supervisión' : 'obras en supervisión'}
+                </Typography>
+              </Box>
+            </Box>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              size="large"
+              sx={{ 
+                background: 'rgba(255,255,255,0.2)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                color: 'white',
+                fontWeight: 600,
+                px: 3,
+                py: 1.5,
+                borderRadius: 3,
+                '&:hover': {
+                  background: 'rgba(255,255,255,0.3)',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+                }
+              }}
+              onClick={() => navigate('/supervision/nueva')}
+            >
+              Nueva Obra
+            </Button>
           </Box>
         </Box>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          sx={{ bgcolor: '#f57c00' }}
-          onClick={() => navigate('/supervision/nueva')}
-        >
-          Nueva Obra
-        </Button>
+        
+        {/* Elementos decorativos */}
+        <Box sx={{
+          position: 'absolute',
+          top: -40,
+          right: -40,
+          width: 180,
+          height: 180,
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.08)',
+          zIndex: 1
+        }} />
+        <Box sx={{
+          position: 'absolute',
+          bottom: -25,
+          left: -25,
+          width: 120,
+          height: 120,
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.05)',
+          zIndex: 1
+        }} />
       </Box>
 
-      {/* Filtros */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
+      {/* Filtros Modernos */}
+      <Card sx={{ 
+        mb: 4,
+        borderRadius: 3,
+        boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+        border: '1px solid rgba(0, 0, 0, 0.05)'
+      }}>
+        <CardContent sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+            <Box sx={{
+              p: 1,
+              borderRadius: 2,
+              background: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
+              color: 'white'
+            }}>
+              <SearchIcon fontSize="small" />
+            </Box>
+            <Typography variant="h6" fontWeight="600" color="text.primary">
+              Filtros de Búsqueda
+            </Typography>
+          </Box>
           <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
             <SearchBar
               value={filters.search || ''}
