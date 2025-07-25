@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
+import { supabase } from './supabase'
 
 const app = express()
 
@@ -36,17 +37,28 @@ app.get('/', (req: Request, res: Response) => {
   })
 })
 
-// Health check SIN base de datos
+// Health check CON Supabase
 app.get('/api/health', async (req: Request, res: Response) => {
-  res.json({
-    success: true,
-    message: 'API de Control de Valorizaciones funcionando correctamente',
-    timestamp: new Date().toISOString(),
-    version: '1.0.0',
-    database: 'not_configured',
-    environment: process.env.NODE_ENV || 'development',
-    status: 'DEMO MODE - Sin base de datos'
-  })
+  try {
+    // Probar conexión con Supabase
+    const { data, error } = await supabase.from('empresas').select('count').limit(1)
+    
+    res.json({
+      success: true,
+      message: 'API de Control de Valorizaciones funcionando correctamente',
+      timestamp: new Date().toISOString(),
+      version: '1.0.0',
+      database: error ? 'connection_error' : 'connected',
+      environment: process.env.NODE_ENV || 'development',
+      status: 'SUPABASE CONNECTED'
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error de conexión con la base de datos',
+      error: error
+    })
+  }
 })
 
 // Test endpoint
@@ -63,98 +75,147 @@ app.get('/api/test', (req: Request, res: Response) => {
   })
 })
 
-// Rutas DEMO con datos ficticios
-app.get('/api/empresas', (req: Request, res: Response) => {
-  res.json({
-    success: true,
-    data: [
-      {
-        id: 1,
-        ruc: '20123456789',
-        razonSocial: 'CONSTRUCTORA DEMO SAC',
-        nombreComercial: 'Constructora Demo',
-        direccion: 'Av. Demo 123, Lima',
-        telefono: '01-1234567',
-        email: 'demo@constructora.com',
-        representanteLegal: 'Juan Demo',
-        esConsorcio: false,
-        estado: 'ACTIVO'
+// Endpoint de empresas CON Supabase
+app.get('/api/empresas', async (req: Request, res: Response) => {
+  try {
+    const { data: empresas, error } = await supabase
+      .from('empresas')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        error: { code: 'DATABASE_ERROR', message: error.message }
+      })
+    }
+
+    res.json({
+      success: true,
+      data: empresas?.map(empresa => ({
+        id: empresa.id,
+        ruc: empresa.ruc,
+        razonSocial: empresa.razon_social,
+        nombreComercial: empresa.nombre_comercial,
+        direccion: empresa.direccion,
+        telefono: empresa.telefono,
+        email: empresa.email,
+        representanteLegal: empresa.representante_legal,
+        esConsorcio: empresa.es_consorcio,
+        estado: empresa.estado
+      })) || [],
+      pagination: {
+        page: 1,
+        limit: 100,
+        total: empresas?.length || 0,
+        totalPages: 1
       },
-      {
-        id: 2,
-        ruc: '20987654321',
-        razonSocial: 'INGENIEROS DEMO SRL',
-        nombreComercial: 'Ingenieros Demo',
-        direccion: 'Calle Demo 456, Lima',
-        telefono: '01-7654321',
-        email: 'demo@ingenieros.com',
-        representanteLegal: 'María Demo',
-        esConsorcio: false,
-        estado: 'ACTIVO'
-      }
-    ],
-    pagination: {
-      page: 1,
-      limit: 10,
-      total: 2,
-      totalPages: 1
-    },
-    message: 'Datos DEMO - Configurar base de datos para datos reales'
-  })
+      message: 'Datos desde Supabase'
+    })
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: { code: 'SERVER_ERROR', message: error.message }
+    })
+  }
 })
 
-app.get('/api/ejecucion/obras', (req: Request, res: Response) => {
-  res.json({
-    success: true,
-    data: [
-      {
-        id: 1,
-        numeroContrato: 'EJE-DEMO-001',
-        nombreObra: 'Obra Demo de Ejecución',
-        empresaId: 1,
-        montoContrato: 250000.00,
-        fechaInicio: '2024-01-15',
-        fechaFin: '2024-06-15',
-        ubicacion: 'Lima - Demo',
-        descripcion: 'Obra de demostración para testing',
-        estado: 'EN_PROCESO'
-      }
-    ],
-    pagination: {
-      page: 1,
-      limit: 10,
-      total: 1,
-      totalPages: 1
-    },
-    message: 'Datos DEMO - Configurar base de datos para datos reales'
-  })
+app.get('/api/ejecucion/obras', async (req: Request, res: Response) => {
+  try {
+    const { data: obras, error } = await supabase
+      .from('obras_ejecucion')
+      .select(`
+        *,
+        empresas:empresa_ejecutora_id(id, razon_social, nombre_comercial)
+      `)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        error: { code: 'DATABASE_ERROR', message: error.message }
+      })
+    }
+
+    res.json({
+      success: true,
+      data: obras?.map(obra => ({
+        id: obra.id,
+        numeroContrato: obra.numero_contrato,
+        nombreObra: obra.nombre_obra,
+        numeroExpediente: obra.numero_expediente,
+        periodoValorizado: obra.periodo_valorizado,
+        fechaInicio: obra.fecha_inicio,
+        plazoEjecucion: obra.plazo_ejecucion,
+        empresaEjecutora: obra.empresas?.razon_social || 'No asignada',
+        montoContrato: obra.monto_contrato,
+        ubicacion: obra.ubicacion,
+        descripcion: obra.descripcion,
+        estado: obra.estado
+      })) || [],
+      pagination: {
+        page: 1,
+        limit: 100,
+        total: obras?.length || 0,
+        totalPages: 1
+      },
+      message: 'Datos desde Supabase'
+    })
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: { code: 'SERVER_ERROR', message: error.message }
+    })
+  }
 })
 
-app.get('/api/supervision/obras', (req: Request, res: Response) => {
-  res.json({
-    success: true,
-    data: [
-      {
-        id: 1,
-        numeroContrato: 'SUP-DEMO-001',
-        nombreObra: 'Supervisión Demo',
-        empresaId: 2,
-        montoContrato: 75000.00,
-        fechaInicio: '2024-01-10',
-        fechaFin: '2024-08-10',
-        ubicacion: 'Lima - Demo',
-        descripcion: 'Supervisión de demostración para testing',
-        estado: 'EN_PROCESO'
-      }
-    ],
-    pagination: {
-      page: 1,
-      limit: 10,
-      total: 1,
-      totalPages: 1
-    },
-    message: 'Datos DEMO - Configurar base de datos para datos reales'
-  })
+app.get('/api/supervision/obras', async (req: Request, res: Response) => {
+  try {
+    const { data: obras, error } = await supabase
+      .from('obras_supervision')
+      .select(`
+        *,
+        empresas:empresa_supervisora_id(id, razon_social, nombre_comercial)
+      `)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        error: { code: 'DATABASE_ERROR', message: error.message }
+      })
+    }
+
+    res.json({
+      success: true,
+      data: obras?.map(obra => ({
+        id: obra.id,
+        numeroContrato: obra.numero_contrato,
+        nombreObra: obra.nombre_obra,
+        numeroExpediente: obra.numero_expediente,
+        periodoValorizado: obra.periodo_valorizado,
+        fechaInicio: obra.fecha_inicio,
+        plazoEjecucion: obra.plazo_ejecucion,
+        empresaSupervisora: obra.empresas?.razon_social || 'No asignada',
+        montoContrato: obra.monto_contrato,
+        ubicacion: obra.ubicacion,
+        descripcion: obra.descripcion,
+        estado: obra.estado
+      })) || [],
+      pagination: {
+        page: 1,
+        limit: 100,
+        total: obras?.length || 0,
+        totalPages: 1
+      },
+      message: 'Datos desde Supabase'
+    })
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: { code: 'SERVER_ERROR', message: error.message }
+    })
+  }
 })
 
 // 404 handler
