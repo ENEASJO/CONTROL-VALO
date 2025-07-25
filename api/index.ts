@@ -27,17 +27,17 @@ app.get('/', (req: Request, res: Response) => {
     message: 'API de Control de Valorizaciones',
     version: '1.0.0',
     endpoints: {
-      health: '/health',
-      test: '/test',
-      empresas: '/empresas',
-      ejecucion: '/ejecucion/obras',
-      supervision: '/supervision/obras'
+      health: '/api/health',
+      test: '/api/test',
+      empresas: '/api/empresas',
+      ejecucion: '/api/ejecucion/obras',
+      supervision: '/api/supervision/obras'
     }
   })
 })
 
 // Health check SIN base de datos
-app.get('/health', async (req: Request, res: Response) => {
+app.get('/api/health', async (req: Request, res: Response) => {
   res.json({
     success: true,
     message: 'API de Control de Valorizaciones funcionando correctamente',
@@ -50,7 +50,7 @@ app.get('/health', async (req: Request, res: Response) => {
 })
 
 // Test endpoint
-app.get('/test', (req: Request, res: Response) => {
+app.get('/api/test', (req: Request, res: Response) => {
   res.json({
     success: true,
     message: 'API funcionando en modo DEMO',
@@ -64,7 +64,7 @@ app.get('/test', (req: Request, res: Response) => {
 })
 
 // Rutas DEMO con datos ficticios
-app.get('/empresas', (req: Request, res: Response) => {
+app.get('/api/empresas', (req: Request, res: Response) => {
   res.json({
     success: true,
     data: [
@@ -103,7 +103,7 @@ app.get('/empresas', (req: Request, res: Response) => {
   })
 })
 
-app.get('/ejecucion/obras', (req: Request, res: Response) => {
+app.get('/api/ejecucion/obras', (req: Request, res: Response) => {
   res.json({
     success: true,
     data: [
@@ -130,7 +130,7 @@ app.get('/ejecucion/obras', (req: Request, res: Response) => {
   })
 })
 
-app.get('/supervision/obras', (req: Request, res: Response) => {
+app.get('/api/supervision/obras', (req: Request, res: Response) => {
   res.json({
     success: true,
     data: [
