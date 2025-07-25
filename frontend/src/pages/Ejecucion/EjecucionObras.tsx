@@ -15,6 +15,12 @@ import { useNavigate } from 'react-router-dom'
 import { useObrasEjecucion, useDeleteObraEjecucion } from '../../hooks/useEjecucion'
 import { useNotification } from '../../hooks/useNotification'
 import { TableColumn, PaginationParams, SearchFilters } from '../../types'
+import SearchBar from '../../components/Common/SearchBar.tsx'
+import LoadingSpinner from '../../components/Common/LoadingSpinner.tsx'
+import DataTable from '../../components/Common/DataTable.tsx'
+import ErrorMessage from '../../components/Common/ErrorMessage.tsx'
+import ConfirmDialog from '../../components/Common/ConfirmDialog.tsx'
+import NotificationSnackbar from '../../components/Common/NotificationSnackbar.tsx'
 
 // Tipos temporales hasta que estén definidos correctamente
 interface Obra {
@@ -50,7 +56,7 @@ const EjecucionObras = () => {
     obra: Obra | null
   }>({ open: false, obra: null })
 
-  const { showNotification } = useNotification()
+  const { showNotification, notification, hideNotification } = useNotification()
 
   // Queries y mutations
   const { data: obrasData, isLoading, error, refetch } = useObrasEjecucion(filters)
