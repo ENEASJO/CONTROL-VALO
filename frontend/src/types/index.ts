@@ -144,6 +144,109 @@ export interface UserPermissions {
 export type TipoObra = 'ejecucion' | 'supervision'
 export type EstadoObra = 'planificada' | 'en_proceso' | 'completada' | 'suspendida'
 export type TipoEmpresa = 'constructora' | 'supervisora' | 'consorcio'
+export type ModuloTipo = 'ejecucion' | 'supervision'
+
+// Tipos de empresas
+export interface Empresa extends BaseEntity {
+  nombre: string
+  ruc: string
+  telefono?: string
+  email?: string
+  direccion?: string
+  esConsorcio: boolean
+  integrantesConsorcio?: IntegranteConsorcio[]
+}
+
+export interface IntegranteConsorcio {
+  id: number
+  empresaId: number
+  nombre: string
+  ruc: string
+  porcentajeParticipacion: number
+}
+
+// Tipos de profesionales
+export interface Profesional extends BaseEntity {
+  nombres: string
+  apellidos: string
+  documentoIdentidad: string
+  cip?: string
+  telefono?: string
+  email?: string
+  especialidad: string
+}
+
+export interface ProfesionalFormData {
+  nombres: string
+  apellidos: string
+  documentoIdentidad: string
+  cip?: string
+  telefono?: string
+  email?: string
+  especialidad: string
+}
+
+// Tipos de obras
+export interface ObraBase extends BaseEntity {
+  nombreObra: string
+  numeroContrato: string
+  numeroExpediente: string
+  periodoValorizado: string
+  fechaInicio: string
+  plazoEjecucion: number
+  montoContrato: number
+  ubicacion: string
+  descripcion?: string
+  estado: EstadoObra
+}
+
+export interface FormularioObraData {
+  nombreObra: string
+  numeroContrato: string
+  numeroExpediente: string
+  periodoValorizado: string
+  fechaInicio: string
+  plazoEjecucion: number
+  montoContrato: number
+  ubicacion: string
+  descripcion?: string
+  empresaEjecutoraId?: number
+  empresaSupervisoraId?: number
+  profesionales?: ProfesionalFormData[]
+}
+
+// Reglas de validación
+export const VALIDATION_RULES = {
+  required: 'Este campo es obligatorio',
+  email: 'Ingrese un email válido',
+  phone: 'Ingrese un teléfono válido',
+  ruc: 'Ingrese un RUC válido',
+  cip: 'Ingrese un CIP válido',
+  minLength: (min: number) => `Mínimo ${min} caracteres`,
+  maxLength: (max: number) => `Máximo ${max} caracteres`,
+  numeric: 'Solo se permiten números',
+  positive: 'Debe ser un número positivo',
+  percentage: 'Debe ser un porcentaje válido (0-100)',
+  dateFormat: 'Formato de fecha inválido',
+  contractNumber: 'Formato de número de contrato inválido',
+  expedientNumber: 'Formato de número de expediente inválido',
+} as const
+
+export const VALIDATION_MESSAGES = {
+  REQUIRED_FIELD: 'Este campo es obligatorio',
+  INVALID_EMAIL: 'Ingrese un email válido',
+  INVALID_PHONE: 'Ingrese un teléfono válido',
+  INVALID_RUC: 'El RUC debe tener 11 dígitos',
+  INVALID_CIP: 'El CIP debe tener el formato correcto',
+  MIN_LENGTH: (min: number) => `Mínimo ${min} caracteres`,
+  MAX_LENGTH: (max: number) => `Máximo ${max} caracteres`,
+  INVALID_NUMBER: 'Debe ser un número válido',
+  INVALID_POSITIVE: 'Debe ser un número positivo',
+  INVALID_PERCENTAGE: 'Debe estar entre 0 y 100',
+  INVALID_DATE: 'Fecha inválida',
+  FUTURE_DATE_REQUIRED: 'La fecha debe ser futura',
+  PAST_DATE_REQUIRED: 'La fecha debe ser pasada',
+} as const
 
 // Constantes útiles
 export const ITEMS_PER_PAGE_OPTIONS = [10, 25, 50, 100] as const

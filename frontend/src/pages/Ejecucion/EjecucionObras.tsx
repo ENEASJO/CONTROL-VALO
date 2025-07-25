@@ -50,7 +50,7 @@ const EjecucionObras = () => {
     obra: Obra | null
   }>({ open: false, obra: null })
 
-  const { notification, showSuccess, showError, hideNotification } = useNotification()
+  const { showNotification } = useNotification()
 
   // Queries y mutations
   const { data: obrasData, isLoading, error, refetch } = useObrasEjecucion(filters)
@@ -61,45 +61,46 @@ const EjecucionObras = () => {
     {
       id: 'nombreObra',
       label: 'Nombre de la Obra',
-      minWidth: 250,
+      width: 250,
     },
     {
       id: 'numeroContrato',
       label: 'N° Contrato',
-      minWidth: 140,
+      width: 140,
     },
     {
       id: 'numeroExpediente',
       label: 'N° Expediente',
-      minWidth: 140,
+      width: 140,
     },
     {
       id: 'periodoValorizado',
       label: 'Período',
-      minWidth: 120,
+      width: 120,
     },
     {
       id: 'fechaInicio',
       label: 'Fecha Inicio',
-      minWidth: 120,
-      format: (value) => new Date(value).toLocaleDateString('es-PE'),
+      width: 120,
+      format: (value: any) => new Date(value).toLocaleDateString('es-PE'),
     },
     {
       id: 'plazoEjecucion',
       label: 'Plazo (días)',
-      minWidth: 100,
+      width: 100,
+      format: (value: any) => `${value} días`,
       align: 'center',
     },
     {
       id: 'empresaEjecutora',
       label: 'Empresa Ejecutora',
-      minWidth: 200,
-      format: (value) => value?.nombre || '-',
+      width: 200,
+      format: (value: any) => value?.nombre || 'N/A',
     },
     {
       id: 'profesionales',
       label: 'Profesionales',
-      minWidth: 120,
+      width: 120,
       align: 'center',
       format: (value) => (
         <Chip 
