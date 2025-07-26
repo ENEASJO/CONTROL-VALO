@@ -190,9 +190,14 @@ const EjecucionObras = () => {
 
   // Debug: Mostrar estructura de datos
   console.log('🔍 DEBUG obrasData:', obrasData)
+  console.log('🔍 DEBUG isLoading:', isLoading)
+  console.log('🔍 DEBUG error:', error)
   
   const obras = obrasData?.data || []
   const totalCount = obrasData?.pagination?.total || 0
+  
+  console.log('🔍 DEBUG obras array:', obras)
+  console.log('🔍 DEBUG totalCount:', totalCount)
 
   return (
     <Box>
