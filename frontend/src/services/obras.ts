@@ -1,4 +1,4 @@
-import { api } from './api'
+import { apiRequest } from './api'
 
 export interface ObraBase {
   id: number
@@ -50,7 +50,7 @@ class ObrasService {
     const queryString = params.toString()
     const url = queryString ? `${this.baseUrl}?${queryString}` : this.baseUrl
     
-    return api.get<{
+    return apiRequest.get<{
       data: ObraBase[]
       pagination: {
         page: number
@@ -62,28 +62,28 @@ class ObrasService {
   }
 
   async getObraById(id: number) {
-    return api.get<ObraBase>(`${this.baseUrl}?id=${id}`)
+    return apiRequest.get<ObraBase>(`${this.baseUrl}?id=${id}`)
   }
 
   async createObra(data: CreateObraBaseDto) {
-    return api.post<ObraBase>(this.baseUrl, data)
+    return apiRequest.post<ObraBase>(this.baseUrl, data)
   }
 
   async updateObra(id: number, data: UpdateObraBaseDto) {
-    return api.put<ObraBase>(`${this.baseUrl}?id=${id}`, data)
+    return apiRequest.put<ObraBase>(`${this.baseUrl}?id=${id}`, data)
   }
 
   async deleteObra(id: number) {
-    return api.delete(`${this.baseUrl}?id=${id}`)
+    return apiRequest.delete(`${this.baseUrl}?id=${id}`)
   }
 
   async getObrasStats() {
-    return api.get<ObrasStats>(`${this.baseUrl}?stats=true`)
+    return apiRequest.get<ObrasStats>(`${this.baseUrl}?stats=true`)
   }
 
   // Método para obtener obras disponibles para asociar a ejecución/supervisión
   async getObrasDisponibles() {
-    return api.get<{data: ObraBase[]}>(`${this.baseUrl}?limit=1000&sortBy=nombre&sortOrder=asc`)
+    return apiRequest.get<{data: ObraBase[]}>(`${this.baseUrl}?limit=1000&sortBy=nombre&sortOrder=asc`)
   }
 }
 
