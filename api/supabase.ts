@@ -56,3 +56,10 @@ export interface ObraSupervision {
   updated_at: string
   empresas?: Empresa
 }
+
+export interface Obra {
+  id: number
+  nombre: string
+  created_at: string
+  updated_at: string
+}

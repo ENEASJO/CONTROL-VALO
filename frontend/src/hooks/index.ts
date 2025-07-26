@@ -6,6 +6,17 @@ export { useForm, validators } from './useForm'
 export type { FormField, FormConfig } from './useForm'
 
 export { 
+  useObras, 
+  useObra, 
+  useObrasStats,
+  useObrasDisponibles,
+  useCreateObra, 
+  useUpdateObra, 
+  useDeleteObra,
+  useObrasManager
+} from './useObras'
+
+export { 
   useEmpresas, 
   useEmpresa, 
   useCreateEmpresa, 

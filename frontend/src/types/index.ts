@@ -210,7 +210,14 @@ export interface ProfesionalFormData {
   porcentajeParticipacion?: number
 }
 
-// Tipos de obras
+// Tipos de obras base (nueva entidad principal)
+export interface ObraBaseEntity extends BaseEntity {
+  nombre: string
+  obraEjecucion?: any
+  obraSupervision?: any
+}
+
+// Tipos de obras específicas (mantener compatibilidad)
 export interface ObraBase extends BaseEntity {
   nombreObra: string
   numeroContrato: string

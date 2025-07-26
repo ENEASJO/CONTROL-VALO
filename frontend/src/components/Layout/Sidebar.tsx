@@ -14,6 +14,7 @@ import {
   Construction as ConstructionIcon,
   Visibility as SupervisionIcon,
   Business as BusinessIcon,
+  Assignment as AssignmentIcon,
 } from '@mui/icons-material'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { MenuItem } from '../../types'
@@ -30,6 +31,14 @@ const menuItems: MenuItem[] = [
     icon: DashboardIcon,
     color: '#64748b',
     gradient: 'linear-gradient(135deg, #64748b 0%, #94a3b8 100%)',
+  },
+  {
+    id: 'obras',
+    label: 'Obras',
+    path: '/obras',
+    icon: AssignmentIcon,
+    color: '#7c3aed',
+    gradient: 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%)',
   },
   {
     id: 'ejecucion',

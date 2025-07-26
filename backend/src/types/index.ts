@@ -1,6 +1,15 @@
 // Tipos actualizados para SQLite
 
 // Interfaces base de entidades
+export interface ObraBase {
+  id: number
+  nombre: string
+  createdAt: Date
+  updatedAt: Date
+  obraEjecucion?: ObraEjecucion
+  obraSupervision?: ObraSupervision
+}
+
 export interface Obra {
   id: number
   nombreObra: string
@@ -50,6 +59,14 @@ export interface Profesional {
 }
 
 // DTOs para formularios y requests
+export interface CreateObraBaseDto {
+  nombre: string
+}
+
+export interface UpdateObraBaseDto {
+  nombre?: string
+}
+
 export interface CreateObraDto {
   nombreObra: string
   numeroContrato: string
@@ -138,6 +155,14 @@ export interface ValidationError {
 }
 
 // Tipos para filtros y búsqueda
+export interface ObraBaseFilters {
+  search?: string
+  page?: number
+  limit?: number
+  sortBy?: 'nombre' | 'createdAt'
+  sortOrder?: 'asc' | 'desc'
+}
+
 export interface ObraFilters {
   search?: string
   empresaEjecutoraId?: number

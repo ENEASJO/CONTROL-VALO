@@ -11,6 +11,15 @@ export type {
   EmpresasFilters 
 } from './empresas'
 
+export { default as obrasService } from './obras'
+export type { 
+  ObraBase, 
+  CreateObraBaseDto, 
+  UpdateObraBaseDto, 
+  ObraBaseFilters,
+  ObrasStats 
+} from './obras'
+
 export { default as ejecucionService } from './ejecucion'
 export type { 
   ObraEjecucion, 

@@ -16,6 +16,7 @@ import {
 import { Routes, Route } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Dashboard from '../../pages/Dashboard/Dashboard'
+import Obras from '../../pages/Obras/Obras'
 import EjecucionObras from '../../pages/Ejecucion/EjecucionObras'
 import EjecucionObraForm from '../../pages/Ejecucion/EjecucionObraForm'
 import EjecucionObraDetalle from '../../pages/Ejecucion/EjecucionObraDetalle'
@@ -121,6 +122,9 @@ const Layout = () => {
       >
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          
+          {/* Rutas de Obras */}
+          <Route path="/obras" element={<Obras />} />
           
           {/* Rutas de Ejecución */}
           <Route path="/ejecucion" element={<EjecucionObras />} />
