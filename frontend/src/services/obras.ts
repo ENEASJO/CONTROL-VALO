@@ -36,7 +36,7 @@ export interface ObrasStats {
 }
 
 class ObrasService {
-  private readonly baseUrl = '/api/obras'
+  private readonly baseUrl = '/obras'
 
   async getObras(filters?: ObraBaseFilters) {
     const params = new URLSearchParams()
