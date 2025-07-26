@@ -186,14 +186,8 @@ const Empresas = () => {
     )
   }
 
-  // Debug: Mostrar estructura de datos
-  console.log('🔍 DEBUG empresasData:', empresasData)
-  
   const empresas = empresasData?.data || []
   const totalCount = empresasData?.pagination?.total || 0
-  
-  console.log('🔍 DEBUG empresas array:', empresas)
-  console.log('🔍 DEBUG empresas totalCount:', totalCount)
 
   return (
     <Box>
@@ -327,79 +321,104 @@ const Empresas = () => {
       {isLoading ? (
         <LoadingSpinner message="Cargando empresas..." />
       ) : (
-        <Box>
-          {/* DEBUG: Lista simple */}
-          <Card sx={{ mb: 2, p: 2 }}>
-            <Typography variant="h6">🔍 DEBUG: Datos recibidos Consorcios</Typography>
-            <Typography>Total empresas: {totalCount}</Typography>
-            <Typography>Array length: {empresas.length}</Typography>
-            {empresas.slice(0, 3).map((empresa, index) => (
-              <Box key={index} sx={{ p: 1, border: '1px solid #ddd', mt: 1 }}>
-                <Typography><strong>ID:</strong> {empresa.id}</Typography>
-                <Typography><strong>Razón Social:</strong> {empresa.razonSocial}</Typography>
-                <Typography><strong>RUC:</strong> {empresa.ruc}</Typography>
-                <Typography><strong>Tipo:</strong> {empresa.esConsorcio ? 'Consorcio' : 'Empresa'}</Typography>
+        <Card sx={{ 
+          borderRadius: 3,
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          border: '1px solid rgba(0, 0, 0, 0.05)'
+        }}>
+          <CardContent sx={{ p: 0 }}>
+            {empresas.length === 0 ? (
+              <Box sx={{ p: 4, textAlign: 'center' }}>
+                <Typography variant="h6" color="text.secondary" gutterBottom>
+                  No hay empresas registradas
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  ¡Registra la primera empresa o consorcio!
+                </Typography>
               </Box>
-            ))}
-            {empresas.length > 3 && <Typography>... y {empresas.length - 3} más</Typography>}
-          </Card>
-          
-          {/* Tabla simple funcional */}
-          <Card>
-            <CardContent>
-              <Typography variant="h6" sx={{ mb: 2 }}>🏢 Consorcios y Empresas ({empresas.length})</Typography>
-              {empresas.length === 0 ? (
-                <Typography color="text.secondary">No hay empresas registradas</Typography>
-              ) : (
-                <Box sx={{ overflow: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                      <tr style={{ backgroundColor: '#f5f5f5' }}>
-                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>ID</th>
-                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Razón Social</th>
-                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>RUC</th>
-                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Tipo</th>
-                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Estado</th>
-                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Teléfono</th>
-                        <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #ddd' }}>Acciones</th>
+            ) : (
+              <Box sx={{ overflow: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr style={{ 
+                      background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                      color: 'white'
+                    }}>
+                      <th style={{ padding: '16px', textAlign: 'left', fontWeight: 600 }}>ID</th>
+                      <th style={{ padding: '16px', textAlign: 'left', fontWeight: 600 }}>Razón Social</th>
+                      <th style={{ padding: '16px', textAlign: 'left', fontWeight: 600 }}>RUC</th>
+                      <th style={{ padding: '16px', textAlign: 'left', fontWeight: 600 }}>Tipo</th>
+                      <th style={{ padding: '16px', textAlign: 'left', fontWeight: 600 }}>Estado</th>
+                      <th style={{ padding: '16px', textAlign: 'left', fontWeight: 600 }}>Teléfono</th>
+                      <th style={{ padding: '16px', textAlign: 'center', fontWeight: 600 }}>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {empresas.map((empresa, index) => (
+                      <tr key={empresa.id} style={{ 
+                        backgroundColor: index % 2 === 0 ? '#ffffff' : '#eff6ff',
+                        transition: 'background-color 0.2s ease'
+                      }}>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #dbeafe' }}>
+                          <Chip label={empresa.id} size="small" variant="outlined" color="primary" />
+                        </td>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #dbeafe', fontWeight: 500 }}>
+                          {empresa.razonSocial}
+                        </td>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #dbeafe', fontFamily: 'monospace' }}>
+                          {empresa.ruc}
+                        </td>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #dbeafe' }}>
+                          <Chip 
+                            label={empresa.esConsorcio ? '🏗️ Consorcio' : '🏢 Empresa'} 
+                            size="small" 
+                            color={empresa.esConsorcio ? 'primary' : 'secondary'}
+                            variant="filled"
+                            sx={{ fontWeight: 600 }}
+                          />
+                        </td>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #dbeafe' }}>
+                          <Chip 
+                            label={empresa.estado} 
+                            size="small" 
+                            color={empresa.estado === 'ACTIVO' ? 'success' : 'default'}
+                            variant="filled"
+                            sx={{ fontWeight: 600 }}
+                          />
+                        </td>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #dbeafe', color: '#1e40af' }}>
+                          {empresa.telefono || '-'}
+                        </td>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #dbeafe', textAlign: 'center' }}>
+                          <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+                            <Button 
+                              size="small" 
+                              variant="outlined" 
+                              color="primary"
+                              onClick={() => handleView(empresa)}
+                              sx={{ minWidth: 60 }}
+                            >
+                              Ver
+                            </Button>
+                            <Button 
+                              size="small" 
+                              variant="contained" 
+                              color="primary"
+                              onClick={() => handleEdit(empresa)}
+                              sx={{ minWidth: 60 }}
+                            >
+                              Editar
+                            </Button>
+                          </Box>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {empresas.map((empresa) => (
-                        <tr key={empresa.id}>
-                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{empresa.id}</td>
-                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{empresa.razonSocial}</td>
-                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{empresa.ruc}</td>
-                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>
-                            <Chip 
-                              label={empresa.esConsorcio ? '🏗️ Consorcio' : '🏢 Empresa'} 
-                              size="small" 
-                              color={empresa.esConsorcio ? 'primary' : 'secondary'}
-                              variant="filled"
-                            />
-                          </td>
-                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>
-                            <Chip 
-                              label={empresa.estado} 
-                              size="small" 
-                              color={empresa.estado === 'ACTIVO' ? 'success' : 'default'}
-                              variant="filled"
-                            />
-                          </td>
-                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{empresa.telefono || '-'}</td>
-                          <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
-                            <Button size="small" onClick={() => handleView(empresa)}>Ver</Button>
-                            <Button size="small" onClick={() => handleEdit(empresa)}>Editar</Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </Box>
-              )}
-            </CardContent>
-          </Card>
-        </Box>
+                    ))}
+                  </tbody>
+                </table>
+              </Box>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {/* Dialog de confirmación para eliminar */}

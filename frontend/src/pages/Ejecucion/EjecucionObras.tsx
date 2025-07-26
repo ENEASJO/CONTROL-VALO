@@ -170,16 +170,8 @@ const EjecucionObras = () => {
     )
   }
 
-  // Debug: Mostrar estructura de datos
-  console.log('🔍 DEBUG obrasData:', obrasData)
-  console.log('🔍 DEBUG isLoading:', isLoading)
-  console.log('🔍 DEBUG error:', error)
-  
   const obras = obrasData?.data || []
   const totalCount = obrasData?.pagination?.total || 0
-  
-  console.log('🔍 DEBUG obras array:', obras)
-  console.log('🔍 DEBUG totalCount:', totalCount)
 
   return (
     <Box>
@@ -313,69 +305,92 @@ const EjecucionObras = () => {
       {isLoading ? (
         <LoadingSpinner message="Cargando obras de ejecución..." />
       ) : (
-        <Box>
-          {/* DEBUG: Lista simple */}
-          <Card sx={{ mb: 2, p: 2 }}>
-            <Typography variant="h6">🔍 DEBUG: Datos recibidos</Typography>
-            <Typography>Total obras: {totalCount}</Typography>
-            <Typography>Array length: {obras.length}</Typography>
-            {obras.map((obra, index) => (
-              <Box key={index} sx={{ p: 1, border: '1px solid #ddd', mt: 1 }}>
-                <Typography><strong>ID:</strong> {obra.id}</Typography>
-                <Typography><strong>Nombre:</strong> {obra.nombreObra}</Typography>
-                <Typography><strong>Contrato:</strong> {obra.numeroContrato}</Typography>
-                <Typography><strong>Estado:</strong> {obra.estado}</Typography>
+        <Card sx={{ 
+          borderRadius: 3,
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          border: '1px solid rgba(0, 0, 0, 0.05)'
+        }}>
+          <CardContent sx={{ p: 0 }}>
+            {obras.length === 0 ? (
+              <Box sx={{ p: 4, textAlign: 'center' }}>
+                <Typography variant="h6" color="text.secondary" gutterBottom>
+                  No hay obras de ejecución registradas
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  ¡Crea la primera obra de ejecución!
+                </Typography>
               </Box>
-            ))}
-          </Card>
-          
-          {/* Tabla simple funcional */}
-          <Card>
-            <CardContent>
-              <Typography variant="h6" sx={{ mb: 2 }}>📋 Obras de Ejecución ({obras.length})</Typography>
-              {obras.length === 0 ? (
-                <Typography color="text.secondary">No hay obras de ejecución registradas</Typography>
-              ) : (
-                <Box sx={{ overflow: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                      <tr style={{ backgroundColor: '#f5f5f5' }}>
-                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>ID</th>
-                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Nombre de la Obra</th>
-                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>N° Contrato</th>
-                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Estado</th>
-                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Descripción</th>
-                        <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #ddd' }}>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {obras.map((obra) => (
-                        <tr key={obra.id}>
-                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{obra.id}</td>
-                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{obra.nombreObra}</td>
-                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{obra.numeroContrato}</td>
-                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>
-                            <Chip 
-                              label={obra.estado} 
+            ) : (
+              <Box sx={{ overflow: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr style={{ 
+                      background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                      color: 'white'
+                    }}>
+                      <th style={{ padding: '16px', textAlign: 'left', fontWeight: 600 }}>ID</th>
+                      <th style={{ padding: '16px', textAlign: 'left', fontWeight: 600 }}>Nombre de la Obra</th>
+                      <th style={{ padding: '16px', textAlign: 'left', fontWeight: 600 }}>N° Contrato</th>
+                      <th style={{ padding: '16px', textAlign: 'left', fontWeight: 600 }}>Estado</th>
+                      <th style={{ padding: '16px', textAlign: 'left', fontWeight: 600 }}>Descripción</th>
+                      <th style={{ padding: '16px', textAlign: 'center', fontWeight: 600 }}>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {obras.map((obra, index) => (
+                      <tr key={obra.id} style={{ 
+                        backgroundColor: index % 2 === 0 ? '#ffffff' : '#f8fafc',
+                        transition: 'background-color 0.2s ease'
+                      }}>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #e2e8f0' }}>
+                          <Chip label={obra.id} size="small" variant="outlined" />
+                        </td>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #e2e8f0', fontWeight: 500 }}>
+                          {obra.nombreObra}
+                        </td>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #e2e8f0', fontFamily: 'monospace' }}>
+                          {obra.numeroContrato}
+                        </td>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #e2e8f0' }}>
+                          <Chip 
+                            label={obra.estado} 
+                            size="small" 
+                            color={obra.estado === 'EN_PROCESO' ? 'warning' : 'success'}
+                            variant="filled"
+                            sx={{ fontWeight: 600 }}
+                          />
+                        </td>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #e2e8f0', color: '#64748b' }}>
+                          {obra.descripcion || 'Sin descripción'}
+                        </td>
+                        <td style={{ padding: '16px', borderBottom: '1px solid #e2e8f0', textAlign: 'center' }}>
+                          <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+                            <Button 
                               size="small" 
-                              color={obra.estado === 'EN_PROCESO' ? 'warning' : 'default'}
-                              variant="filled"
-                            />
-                          </td>
-                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{obra.descripcion || 'Sin descripción'}</td>
-                          <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
-                            <Button size="small" onClick={() => handleView(obra)}>Ver</Button>
-                            <Button size="small" onClick={() => handleEdit(obra)}>Editar</Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </Box>
-              )}
-            </CardContent>
-          </Card>
-        </Box>
+                              variant="outlined" 
+                              onClick={() => handleView(obra)}
+                              sx={{ minWidth: 60 }}
+                            >
+                              Ver
+                            </Button>
+                            <Button 
+                              size="small" 
+                              variant="contained" 
+                              onClick={() => handleEdit(obra)}
+                              sx={{ minWidth: 60 }}
+                            >
+                              Editar
+                            </Button>
+                          </Box>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </Box>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {/* Dialog de confirmación para eliminar */}
