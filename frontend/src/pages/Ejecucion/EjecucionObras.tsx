@@ -331,20 +331,38 @@ const EjecucionObras = () => {
       {isLoading ? (
         <LoadingSpinner message="Cargando obras de ejecución..." />
       ) : (
-        <DataTable
-          data={obras}
-          columns={columns}
-          totalCount={totalCount}
-          page={(filters.page || 1) - 1}
-          rowsPerPage={filters.limit || 10}
-          onPageChange={handlePageChange}
-          onRowsPerPageChange={handleRowsPerPageChange}
-          onView={handleView}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          loading={isLoading}
-          emptyMessage="No hay obras de ejecución registradas. ¡Crea la primera obra!"
-        />
+        <Box>
+          {/* DEBUG: Lista simple */}
+          <Card sx={{ mb: 2, p: 2 }}>
+            <Typography variant="h6">🔍 DEBUG: Datos recibidos</Typography>
+            <Typography>Total obras: {totalCount}</Typography>
+            <Typography>Array length: {obras.length}</Typography>
+            {obras.map((obra, index) => (
+              <Box key={index} sx={{ p: 1, border: '1px solid #ddd', mt: 1 }}>
+                <Typography><strong>ID:</strong> {obra.id}</Typography>
+                <Typography><strong>Nombre:</strong> {obra.nombreObra}</Typography>
+                <Typography><strong>Contrato:</strong> {obra.numeroContrato}</Typography>
+                <Typography><strong>Estado:</strong> {obra.estado}</Typography>
+              </Box>
+            ))}
+          </Card>
+          
+          {/* Tabla original */}
+          <DataTable
+            data={obras}
+            columns={columns}
+            totalCount={totalCount}
+            page={(filters.page || 1) - 1}
+            rowsPerPage={filters.limit || 10}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleRowsPerPageChange}
+            onView={handleView}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            loading={isLoading}
+            emptyMessage="No hay obras de ejecución registradas. ¡Crea la primera obra!"
+          />
+        </Box>
       )}
 
       {/* Dialog de confirmación para eliminar */}
