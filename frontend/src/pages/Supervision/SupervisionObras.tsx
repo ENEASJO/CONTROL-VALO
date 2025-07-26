@@ -43,58 +43,49 @@ const SupervisionObras = () => {
   const { data: obrasData, isLoading, error, refetch } = useSupervisionObras(filters)
   const deleteMutation = useDeleteSupervisionObra()
 
-  // Configuración de columnas de la tabla
+  // Configuración de columnas de la tabla (solo campos que existen)
   const columns: TablaColumn<Obra>[] = [
+    {
+      id: 'id',
+      label: 'ID',
+      minWidth: 80,
+      align: 'center',
+    },
     {
       id: 'nombreObra',
       label: 'Nombre de la Obra',
-      minWidth: 250,
+      minWidth: 300,
     },
     {
       id: 'numeroContrato',
       label: 'N° Contrato',
+      minWidth: 180,
+    },
+    {
+      id: 'estado',
+      label: 'Estado',
       minWidth: 140,
-    },
-    {
-      id: 'numeroExpediente',
-      label: 'N° Expediente',
-      minWidth: 140,
-    },
-    {
-      id: 'periodoValorizado',
-      label: 'Período',
-      minWidth: 120,
-    },
-    {
-      id: 'fechaInicio',
-      label: 'Fecha Inicio',
-      minWidth: 120,
-      format: (value) => new Date(value).toLocaleDateString('es-PE'),
-    },
-    {
-      id: 'plazoEjecucion',
-      label: 'Plazo (días)',
-      minWidth: 100,
-      align: 'center',
+      format: (value) => (
+        <Chip 
+          label={value} 
+          size="small" 
+          color={value === 'EN_PROCESO' ? 'warning' : 'default'}
+          variant="filled"
+          sx={{ bgcolor: '#f57c00', color: 'white' }}
+        />
+      ),
     },
     {
       id: 'empresaSupervisora',
       label: 'Empresa Supervisora',
       minWidth: 200,
-      format: (value) => value?.nombre || '-',
+      format: (value) => value || 'No asignada',
     },
     {
-      id: 'profesionales',
-      label: 'Profesionales',
-      minWidth: 120,
-      align: 'center',
-      format: (value) => (
-        <Chip 
-          label={`${value?.length || 0}`} 
-          size="small" 
-          sx={{ bgcolor: '#f57c00', color: 'white' }}
-        />
-      ),
+      id: 'descripcion',
+      label: 'Descripción',
+      minWidth: 200,
+      format: (value) => value || 'Sin descripción',
     },
   ]
 

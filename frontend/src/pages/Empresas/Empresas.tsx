@@ -43,12 +43,24 @@ const Empresas = () => {
   const { data: empresasData, isLoading, error, refetch } = useEmpresas(filters)
   const deleteMutation = useDeleteEmpresa()
 
-  // Configuración de columnas de la tabla
+  // Configuración de columnas de la tabla (basada en datos reales de la API)
   const columns: TablaColumn<Empresa>[] = [
     {
-      id: 'nombre',
-      label: 'Nombre',
+      id: 'id',
+      label: 'ID',
+      minWidth: 80,
+      align: 'center',
+    },
+    {
+      id: 'razonSocial',
+      label: 'Razón Social',
+      minWidth: 250,
+    },
+    {
+      id: 'nombreComercial',
+      label: 'Nombre Comercial',
       minWidth: 200,
+      format: (value) => value || '-',
     },
     {
       id: 'ruc',
@@ -58,7 +70,7 @@ const Empresas = () => {
     {
       id: 'esConsorcio',
       label: 'Tipo',
-      minWidth: 100,
+      minWidth: 120,
       format: (value) => (
         <Chip 
           label={value ? '🏗️ Consorcio' : '🏢 Empresa'} 
@@ -76,18 +88,17 @@ const Empresas = () => {
       ),
     },
     {
-      id: 'integrantesConsorcio',
-      label: 'Integrantes',
+      id: 'estado',
+      label: 'Estado',
       minWidth: 100,
-      align: 'center',
-      format: (value, row) => row.esConsorcio ? (
+      format: (value) => (
         <Chip 
-          label={`${value?.length || 0}`} 
+          label={value} 
           size="small" 
-          color="primary" 
-          variant="outlined"
+          color={value === 'ACTIVO' ? 'success' : 'default'}
+          variant="filled"
         />
-      ) : '-',
+      ),
     },
     {
       id: 'telefono',
@@ -96,10 +107,10 @@ const Empresas = () => {
       format: (value) => value || '-',
     },
     {
-      id: 'createdAt',
-      label: 'Fecha Registro',
-      minWidth: 140,
-      format: (value) => new Date(value).toLocaleDateString('es-PE'),
+      id: 'email',
+      label: 'Email',
+      minWidth: 180,
+      format: (value) => value || '-',
     },
   ]
 

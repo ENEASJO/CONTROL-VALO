@@ -61,6 +61,9 @@ const Obras: React.FC = () => {
 
   const { data: statsData, isLoading: statsLoading } = useObrasStats()
 
+  // Debug: Mostrar estructura de datos
+  console.log('🔍 DEBUG obras:', obras)
+  console.log('🔍 DEBUG pagination:', pagination)
 
   // Manejadores de eventos
   const handleCreateClick = () => {
