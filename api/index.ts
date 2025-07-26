@@ -355,58 +355,78 @@ app.get('/api/obras', async (req: Request, res: Response) => {
     const limitNum = parseInt(limit as string) || 10
     const offset = (pageNum - 1) * limitNum
 
-    // Construir query base
-    let supabaseQuery = supabase
-      .from('obras')
-      .select(`
-        *,
-        obras_ejecucion!left (id),
-        obras_supervision!left (id)
-      `, { count: 'exact' })
+    // Validar campos de ordenamiento permitidos
+    const validSortFields = ['id', 'nombre', 'created_at', 'updated_at']
+    const sortField = validSortFields.includes(sortBy as string) ? sortBy as string : 'nombre'
+    const sortDirection = sortOrder === 'desc' ? false : true
 
-    // Aplicar filtro de búsqueda
-    if (search) {
-      supabaseQuery = supabaseQuery.ilike('nombre', `%${search}%`)
-    }
+    console.log(`🔍 GET /api/obras - page:${pageNum}, limit:${limitNum}, sort:${sortField}:${sortDirection ? 'asc' : 'desc'}`)
 
-    // Aplicar ordenamiento
-    supabaseQuery = supabaseQuery.order(sortBy as string, { ascending: sortOrder === 'asc' })
+    try {
+      // Construir query base con manejo de errores mejorado
+      // NOTA: Removemos JOINs temporalmente hasta que se ejecute la migración completa
+      let supabaseQuery = supabase
+        .from('obras')
+        .select('*', { count: 'exact' })
 
-    // Aplicar paginación
-    supabaseQuery = supabaseQuery.range(offset, offset + limitNum - 1)
+      // Aplicar filtro de búsqueda
+      if (search) {
+        supabaseQuery = supabaseQuery.ilike('nombre', `%${search}%`)
+      }
 
-    const { data: obras, error: obrasError, count } = await supabaseQuery
+      // Aplicar ordenamiento con campo validado
+      supabaseQuery = supabaseQuery.order(sortField, { ascending: sortDirection })
 
-    if (obrasError) {
-      return res.status(500).json({
-        success: false,
-        error: {
-          code: 'GET_OBRAS_ERROR',
-          message: 'Error al obtener obras'
-        }
-      })
-    }
+      // Aplicar paginación
+      supabaseQuery = supabaseQuery.range(offset, offset + limitNum - 1)
 
-    return res.json({
-      success: true,
-      data: {
-        data: obras,
+      const { data: obras, error: obrasError, count } = await supabaseQuery
+
+      if (obrasError) {
+        console.error('❌ Error de Supabase en listado:', obrasError)
+        return res.status(500).json({
+          success: false,
+          error: {
+            code: 'DATABASE_ERROR',
+            message: `Error de base de datos: ${obrasError.message}`,
+            details: obrasError
+          }
+        })
+      }
+
+      console.log(`✅ Query exitosa: ${obras?.length || 0} obras encontradas de ${count || 0} total`)
+
+      return res.json({
+        success: true,
+        data: obras || [],
         pagination: {
           page: pageNum,
           limit: limitNum,
           total: count || 0,
           totalPages: Math.ceil((count || 0) / limitNum)
         }
-      }
-    })
+      })
+
+    } catch (queryError: any) {
+      console.error('❌ Error en construcción de query:', queryError)
+      return res.status(500).json({
+        success: false,
+        error: {
+          code: 'QUERY_ERROR',
+          message: 'Error al construir la consulta de base de datos',
+          details: queryError.message
+        }
+      })
+    }
 
   } catch (error: any) {
-    console.error('❌ Error en GET /api/obras:', error)
+    console.error('❌ Error general en GET /api/obras:', error)
     return res.status(500).json({
       success: false,
       error: {
         code: 'INTERNAL_ERROR',
-        message: 'Error interno del servidor'
+        message: 'Error interno del servidor',
+        details: error.message
       }
     })
   }

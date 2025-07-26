@@ -32,5 +32,8 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.52.1"
   }
 }
