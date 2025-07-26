@@ -131,7 +131,7 @@ export const useObrasManager = () => {
     setFilters(prev => ({ ...prev, page }))
   }
 
-  const handleSortChange = (sortBy: 'nombre' | 'createdAt', sortOrder: 'asc' | 'desc') => {
+  const handleSortChange = (sortBy: 'nombre' | 'created_at', sortOrder: 'asc' | 'desc') => {
     setFilters(prev => ({ ...prev, sortBy, sortOrder, page: 1 }))
   }
 

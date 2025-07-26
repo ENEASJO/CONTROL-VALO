@@ -61,6 +61,7 @@ const Obras: React.FC = () => {
 
   const { data: statsData, isLoading: statsLoading } = useObrasStats()
 
+
   // Manejadores de eventos
   const handleCreateClick = () => {
     setSelectedObra(null)
@@ -165,8 +166,29 @@ const Obras: React.FC = () => {
     }
   ]
 
+  // Render temprano si hay error
   if (isError) {
-    return <ErrorMessage message="Error al cargar las obras" />
+    return (
+      <Box sx={{ p: 3 }}>
+        <ErrorMessage 
+          title="Error al cargar obras"
+          message={error?.message || "Error al cargar las obras"} 
+          onRetry={() => window.location.reload()}
+        />
+      </Box>
+    )
+  }
+
+  // Loading inicial
+  if (isLoading && !obras?.length) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Typography variant="h4" component="h1" sx={{ fontWeight: 600, mb: 2 }}>
+          Gestión de Obras
+        </Typography>
+        <LoadingSpinner message="Cargando obras..." />
+      </Box>
+    )
   }
 
   return (
@@ -191,7 +213,7 @@ const Obras: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <AssignmentIcon sx={{ color: 'primary.main', mr: 1 }} />
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    {statsData.data.total_obras}
+                    {statsData.data.total_obras || 0}
                   </Typography>
                 </Box>
                 <Typography variant="body2" color="text.secondary">
@@ -207,7 +229,7 @@ const Obras: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <EngineeringIcon sx={{ color: 'success.main', mr: 1 }} />
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    {statsData.data.obras_completas}
+                    {statsData.data.obras_completas || 0}
                   </Typography>
                 </Box>
                 <Typography variant="body2" color="text.secondary">
@@ -223,7 +245,7 @@ const Obras: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <AccountBalanceIcon sx={{ color: 'warning.main', mr: 1 }} />
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    {statsData.data.obras_sin_asignar}
+                    {statsData.data.obras_sin_asignar || 0}
                   </Typography>
                 </Box>
                 <Typography variant="body2" color="text.secondary">
@@ -239,7 +261,10 @@ const Obras: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <TrendingUpIcon sx={{ color: 'info.main', mr: 1 }} />
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    {((statsData.data.obras_completas / statsData.data.total_obras) * 100).toFixed(1)}%
+                    {statsData.data.total_obras > 0 
+                      ? ((statsData.data.obras_completas / statsData.data.total_obras) * 100).toFixed(1)
+                      : 0
+                    }%
                   </Typography>
                 </Box>
                 <Typography variant="body2" color="text.secondary">
@@ -268,12 +293,14 @@ const Obras: React.FC = () => {
           flexWrap: 'wrap',
           gap: 2
         }}>
-          <SearchBar
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="Buscar obras por nombre..."
-            sx={{ flexGrow: 1, maxWidth: 400 }}
-          />
+          <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
+            <SearchBar
+              value={searchTerm}
+              onChange={handleSearch}
+              placeholder="Buscar obras por nombre..."
+              fullWidth
+            />
+          </Box>
           
           <Button
             variant="contained"
@@ -326,12 +353,12 @@ const Obras: React.FC = () => {
       {/* Diálogo de confirmación de eliminación */}
       <ConfirmDialog
         open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
+        onCancel={() => setDeleteDialogOpen(false)}
         onConfirm={handleConfirmDelete}
         title="Eliminar Obra"
         message={`¿Estás seguro de que deseas eliminar la obra "${obraToDelete?.nombre}"?`}
         severity="error"
-        isLoading={isDeleting}
+        loading={isDeleting}
       />
     </Box>
   )

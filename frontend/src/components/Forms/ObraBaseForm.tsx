@@ -29,37 +29,37 @@ const ObraBaseForm: React.FC<ObraBaseFormProps> = ({
   isLoading = false,
   mode
 }) => {
-  const { values, errors, handleChange, handleSubmit, resetForm } = useForm({
+  const { values, setValue, fields, handleSubmit, reset } = useForm({
     initialValues: {
       nombre: initialData?.nombre || ''
     },
-    validators: {
+    validationRules: {
       nombre: (value: string) => {
-        if (!value.trim()) return 'El nombre de la obra es requerido'
+        if (!value?.trim()) return 'El nombre de la obra es requerido'
         if (value.trim().length < 2) return 'El nombre debe tener al menos 2 caracteres'
         if (value.trim().length > 255) return 'El nombre no puede exceder 255 caracteres'
-        return null
+        return undefined
       }
     },
     onSubmit: async (formData) => {
       const success = await onSubmit(formData)
       if (success) {
-        resetForm()
+        reset()
         onClose()
       }
     }
   })
 
   const handleClose = () => {
-    resetForm()
+    reset()
     onClose()
   }
 
   React.useEffect(() => {
     if (open && initialData) {
-      handleChange('nombre', initialData.nombre || '')
+      setValue('nombre', initialData.nombre || '')
     }
-  }, [open, initialData, handleChange])
+  }, [open, initialData, setValue])
 
   return (
     <Dialog 
@@ -90,9 +90,9 @@ const ObraBaseForm: React.FC<ObraBaseFormProps> = ({
               name="nombre"
               label="Nombre de la Obra"
               value={values.nombre}
-              onChange={(e) => handleChange('nombre', e.target.value)}
-              error={!!errors.nombre}
-              helperText={errors.nombre}
+              onChange={(e) => setValue('nombre', e.target.value)}
+              error={!!fields.nombre?.error}
+              helperText={fields.nombre?.error}
               required
               fullWidth
               autoFocus
@@ -140,7 +140,7 @@ const ObraBaseForm: React.FC<ObraBaseFormProps> = ({
           <Button
             type="submit"
             variant="contained"
-            disabled={isLoading || !!errors.nombre || !values.nombre.trim()}
+            disabled={isLoading || !!fields.nombre?.error || !values.nombre?.trim()}
             sx={{ 
               minWidth: 100,
               bgcolor: mode === 'create' ? 'success.main' : 'primary.main',
