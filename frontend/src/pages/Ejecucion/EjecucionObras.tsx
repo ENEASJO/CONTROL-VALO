@@ -63,60 +63,42 @@ const EjecucionObras = () => {
   const { data: obrasData, isLoading, error, refetch } = useObrasEjecucion(filters)
   const deleteMutation = useDeleteObraEjecucion()
 
-  // Configuración de columnas de la tabla
+  // Configuración de columnas de la tabla (solo campos que existen)
   const columns: TableColumn<Obra>[] = [
+    {
+      id: 'id',
+      label: 'ID',
+      width: 80,
+      align: 'center',
+    },
     {
       id: 'nombreObra',
       label: 'Nombre de la Obra',
-      width: 250,
+      width: 300,
     },
     {
       id: 'numeroContrato',
       label: 'N° Contrato',
+      width: 180,
+    },
+    {
+      id: 'estado',
+      label: 'Estado',
       width: 140,
-    },
-    {
-      id: 'numeroExpediente',
-      label: 'N° Expediente',
-      width: 140,
-    },
-    {
-      id: 'periodoValorizado',
-      label: 'Período',
-      width: 120,
-    },
-    {
-      id: 'fechaInicio',
-      label: 'Fecha Inicio',
-      width: 120,
-      format: (value: any) => new Date(value).toLocaleDateString('es-PE'),
-    },
-    {
-      id: 'plazoEjecucion',
-      label: 'Plazo (días)',
-      width: 100,
-      format: (value: any) => `${value} días`,
-      align: 'center',
-    },
-    {
-      id: 'empresaEjecutora',
-      label: 'Consorcio Ejecutor',
-      width: 200,
-      format: (value: any) => value?.nombre || 'N/A',
-    },
-    {
-      id: 'profesionales',
-      label: 'Profesionales',
-      width: 120,
-      align: 'center',
-      format: (value) => (
+      format: (value: any) => (
         <Chip 
-          label={`${value?.length || 0}`} 
+          label={value} 
           size="small" 
-          color="primary" 
-          variant="outlined"
+          color={value === 'EN_PROCESO' ? 'warning' : 'default'}
+          variant="filled"
         />
       ),
+    },
+    {
+      id: 'descripcion',
+      label: 'Descripción',
+      width: 200,
+      format: (value: any) => value || 'Sin descripción',
     },
   ]
 
