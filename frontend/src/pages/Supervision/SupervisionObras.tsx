@@ -16,12 +16,12 @@ import { useNavigate } from 'react-router-dom'
 import { useSupervisionObras, useDeleteSupervisionObra } from '../../hooks/useSupervision'
 import { useNotification } from '../../hooks/useNotification'
 import { Obra, TablaColumn, ObraFilters } from '../../types'
-import DataTable from '../../components/Common/DataTable.tsx'
-import SearchBar from '../../components/Common/SearchBar.tsx'
-import ConfirmDialog from '../../components/Common/ConfirmDialog.tsx'
-import NotificationSnackbar from '../../components/Common/NotificationSnackbar.tsx'
-import LoadingSpinner from '../../components/Common/LoadingSpinner.tsx'
-import ErrorMessage from '../../components/Common/ErrorMessage.tsx'
+import DataTable from '../../components/Common/DataTable'
+import SearchBar from '../../components/Common/SearchBar'
+import ConfirmDialog from '../../components/Common/ConfirmDialog'
+import NotificationSnackbar from '../../components/Common/NotificationSnackbar'
+import LoadingSpinner from '../../components/Common/LoadingSpinner'
+import ErrorMessage from '../../components/Common/ErrorMessage'
 
 const SupervisionObras = () => {
   const navigate = useNavigate()

@@ -16,12 +16,12 @@ import { useNavigate } from 'react-router-dom'
 import { useObrasEjecucion, useDeleteObraEjecucion } from '../../hooks/useEjecucion'
 import { useNotification } from '../../hooks/useNotification'
 import { TableColumn, PaginationParams, SearchFilters } from '../../types'
-import SearchBar from '../../components/Common/SearchBar.tsx'
-import LoadingSpinner from '../../components/Common/LoadingSpinner.tsx'
-import DataTable from '../../components/Common/DataTable.tsx'
-import ErrorMessage from '../../components/Common/ErrorMessage.tsx'
-import ConfirmDialog from '../../components/Common/ConfirmDialog.tsx'
-import NotificationSnackbar from '../../components/Common/NotificationSnackbar.tsx'
+import SearchBar from '../../components/Common/SearchBar'
+import LoadingSpinner from '../../components/Common/LoadingSpinner'
+import DataTable from '../../components/Common/DataTable'
+import ErrorMessage from '../../components/Common/ErrorMessage'
+import ConfirmDialog from '../../components/Common/ConfirmDialog'
+import NotificationSnackbar from '../../components/Common/NotificationSnackbar'
 
 // Tipos temporales hasta que estén definidos correctamente
 interface Obra {

@@ -23,10 +23,10 @@ import {
   Assignment as AssignmentIcon
 } from '@mui/icons-material'
 
-import { DataTable } from '../../components/Common/DataTable'
+import DataTable from '../../components/Common/DataTable'
 import SearchBar from '../../components/Common/SearchBar'
-import { ConfirmDialog } from '../../components/Common/ConfirmDialog'
-import { LoadingSpinner } from '../../components/Common/LoadingSpinner'
+import ConfirmDialog from '../../components/Common/ConfirmDialog'
+import LoadingSpinner from '../../components/Common/LoadingSpinner'
 import ErrorMessage from '../../components/Common/ErrorMessage'
 import ObraBaseForm from '../../components/Forms/ObraBaseForm'
 

@@ -6,7 +6,7 @@ import {
   Business as BusinessIcon,
 } from '@mui/icons-material'
 import { useParams } from 'react-router-dom'
-import EmpresaFormComponent from '../../components/Forms/EmpresaForm.tsx'
+import EmpresaFormComponent from '../../components/Forms/EmpresaForm'
 
 const EmpresaForm = () => {
   const { id } = useParams<{ id: string }>()

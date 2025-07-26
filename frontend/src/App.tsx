@@ -3,7 +3,6 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter } from 'react-router-dom'
 import Layout from './components/Layout/Layout'
-import { NotificationProvider } from './components/Common/NotificationSnackbar.tsx'
 
 // Crear tema personalizado mejorado
 const theme = createTheme({
@@ -172,7 +171,6 @@ function App() {
         <CssBaseline />
         <BrowserRouter>
           <Layout />
-          <NotificationProvider />
         </BrowserRouter>
       </ThemeProvider>
     </QueryClientProvider>

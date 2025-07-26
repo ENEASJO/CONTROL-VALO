@@ -25,8 +25,8 @@ import {
 } from '@mui/icons-material'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSupervisionObra } from '../../hooks/useSupervision'
-import LoadingSpinner from '../../components/Common/LoadingSpinner.tsx'
-import ErrorMessage from '../../components/Common/ErrorMessage.tsx'
+import LoadingSpinner from '../../components/Common/LoadingSpinner'
+import ErrorMessage from '../../components/Common/ErrorMessage'
 
 const SupervisionObraDetalle = () => {
   const navigate = useNavigate()
