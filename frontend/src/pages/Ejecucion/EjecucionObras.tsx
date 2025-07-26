@@ -329,21 +329,52 @@ const EjecucionObras = () => {
             ))}
           </Card>
           
-          {/* Tabla original */}
-          <DataTable
-            data={obras}
-            columns={columns}
-            totalCount={totalCount}
-            page={(filters.page || 1) - 1}
-            rowsPerPage={filters.limit || 10}
-            onPageChange={handlePageChange}
-            onRowsPerPageChange={handleRowsPerPageChange}
-            onView={handleView}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            loading={isLoading}
-            emptyMessage="No hay obras de ejecución registradas. ¡Crea la primera obra!"
-          />
+          {/* Tabla simple funcional */}
+          <Card>
+            <CardContent>
+              <Typography variant="h6" sx={{ mb: 2 }}>📋 Obras de Ejecución ({obras.length})</Typography>
+              {obras.length === 0 ? (
+                <Typography color="text.secondary">No hay obras de ejecución registradas</Typography>
+              ) : (
+                <Box sx={{ overflow: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ backgroundColor: '#f5f5f5' }}>
+                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>ID</th>
+                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Nombre de la Obra</th>
+                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>N° Contrato</th>
+                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Estado</th>
+                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Descripción</th>
+                        <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #ddd' }}>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {obras.map((obra) => (
+                        <tr key={obra.id}>
+                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{obra.id}</td>
+                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{obra.nombreObra}</td>
+                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{obra.numeroContrato}</td>
+                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>
+                            <Chip 
+                              label={obra.estado} 
+                              size="small" 
+                              color={obra.estado === 'EN_PROCESO' ? 'warning' : 'default'}
+                              variant="filled"
+                            />
+                          </td>
+                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{obra.descripcion || 'Sin descripción'}</td>
+                          <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
+                            <Button size="small" onClick={() => handleView(obra)}>Ver</Button>
+                            <Button size="small" onClick={() => handleEdit(obra)}>Editar</Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Box>
+              )}
+            </CardContent>
+          </Card>
         </Box>
       )}
 

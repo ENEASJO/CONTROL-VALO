@@ -165,6 +165,9 @@ const SupervisionObras = () => {
   
   const obras = obrasData?.data || []
   const totalCount = obrasData?.pagination?.total || 0
+  
+  console.log('🔍 DEBUG obras supervision array:', obras)
+  console.log('🔍 DEBUG supervision totalCount:', totalCount)
 
   return (
     <Box>
@@ -289,20 +292,70 @@ const SupervisionObras = () => {
       {isLoading ? (
         <LoadingSpinner message="Cargando obras de supervisión..." />
       ) : (
-        <DataTable
-          data={obras}
-          columns={columns}
-          totalCount={totalCount}
-          page={(filters.page || 1) - 1}
-          rowsPerPage={filters.limit || 10}
-          onPageChange={handlePageChange}
-          onRowsPerPageChange={handleRowsPerPageChange}
-          onView={handleView}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          loading={isLoading}
-          emptyMessage="No hay obras de supervisión registradas. ¡Crea la primera obra!"
-        />
+        <Box>
+          {/* DEBUG: Lista simple */}
+          <Card sx={{ mb: 2, p: 2 }}>
+            <Typography variant="h6">🔍 DEBUG: Datos recibidos Supervisión</Typography>
+            <Typography>Total obras: {totalCount}</Typography>
+            <Typography>Array length: {obras.length}</Typography>
+            {obras.map((obra, index) => (
+              <Box key={index} sx={{ p: 1, border: '1px solid #ddd', mt: 1 }}>
+                <Typography><strong>ID:</strong> {obra.id}</Typography>
+                <Typography><strong>Nombre:</strong> {obra.nombreObra}</Typography>
+                <Typography><strong>Contrato:</strong> {obra.numeroContrato}</Typography>
+                <Typography><strong>Estado:</strong> {obra.estado}</Typography>
+              </Box>
+            ))}
+          </Card>
+          
+          {/* Tabla simple funcional */}
+          <Card>
+            <CardContent>
+              <Typography variant="h6" sx={{ mb: 2 }}>👁️ Obras de Supervisión ({obras.length})</Typography>
+              {obras.length === 0 ? (
+                <Typography color="text.secondary">No hay obras de supervisión registradas</Typography>
+              ) : (
+                <Box sx={{ overflow: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ backgroundColor: '#f5f5f5' }}>
+                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>ID</th>
+                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Nombre de la Obra</th>
+                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>N° Contrato</th>
+                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Estado</th>
+                        <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #ddd' }}>Empresa Supervisora</th>
+                        <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #ddd' }}>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {obras.map((obra) => (
+                        <tr key={obra.id}>
+                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{obra.id}</td>
+                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{obra.nombreObra}</td>
+                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{obra.numeroContrato}</td>
+                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>
+                            <Chip 
+                              label={obra.estado} 
+                              size="small" 
+                              color={obra.estado === 'EN_PROCESO' ? 'warning' : 'default'}
+                              variant="filled"
+                              sx={{ bgcolor: '#f57c00', color: 'white' }}
+                            />
+                          </td>
+                          <td style={{ padding: '12px', border: '1px solid #ddd' }}>{obra.empresaSupervisora || 'No asignada'}</td>
+                          <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
+                            <Button size="small" onClick={() => handleView(obra)}>Ver</Button>
+                            <Button size="small" onClick={() => handleEdit(obra)}>Editar</Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Box>
+              )}
+            </CardContent>
+          </Card>
+        </Box>
       )}
 
       {/* Dialog de confirmación para eliminar */}
