@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
-import { supabase } from './supabase.js'
+import { supabase } from './supabase'
 
 const app = express()
 
