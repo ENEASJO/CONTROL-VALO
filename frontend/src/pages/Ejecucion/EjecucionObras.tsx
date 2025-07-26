@@ -188,8 +188,11 @@ const EjecucionObras = () => {
     )
   }
 
-  const obras = obrasData?.success ? obrasData.data || [] : []
-  const totalCount = obrasData?.success ? obrasData.pagination?.total || 0 : 0
+  // Debug: Mostrar estructura de datos
+  console.log('🔍 DEBUG obrasData:', obrasData)
+  
+  const obras = obrasData?.data || []
+  const totalCount = obrasData?.pagination?.total || 0
 
   return (
     <Box>

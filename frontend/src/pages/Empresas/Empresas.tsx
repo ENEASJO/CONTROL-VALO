@@ -175,8 +175,11 @@ const Empresas = () => {
     )
   }
 
-  const empresas = empresasData?.success ? empresasData.data || [] : []
-  const totalCount = empresasData?.success ? empresasData.pagination?.total || 0 : 0
+  // Debug: Mostrar estructura de datos
+  console.log('🔍 DEBUG empresasData:', empresasData)
+  
+  const empresas = empresasData?.data || []
+  const totalCount = empresasData?.pagination?.total || 0
 
   return (
     <Box>
