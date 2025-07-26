@@ -16,7 +16,7 @@ function getEnvVar(key: string, defaultValue?: string): string {
 
 export const config: AppConfig = {
   apiUrl: import.meta.env.PROD 
-    ? 'https://control-valo.vercel.app/api'  // URL completa para producción
+    ? 'https://control-valoriza-mdsm.vercel.app/api'  // URL correcta para producción
     : getEnvVar('VITE_API_URL', 'http://localhost:3000/api'), // En desarrollo
   appName: getEnvVar('VITE_APP_NAME', 'Control de Valorizaciones'),
   appVersion: getEnvVar('VITE_APP_VERSION', '1.0.0'),
